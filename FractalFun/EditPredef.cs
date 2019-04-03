@@ -9,15 +9,29 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.IO;
 
+/// <summary>
+/// 
+/// </summary>
 namespace FractalFun
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public partial class EditPredef : Form
     {
+        /// <summary>
+        /// 
+        /// </summary>
         public EditPredef()
         {
             InitializeComponent();
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void EditPredef_Load(object sender, EventArgs e)
         {
             TxtEdit.Clear();
@@ -30,6 +44,11 @@ namespace FractalFun
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void ToolStripButton1_Click(object sender, EventArgs e)
         {
             string json = TxtEdit.Text;
