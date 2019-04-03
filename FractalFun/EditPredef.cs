@@ -16,18 +16,21 @@ namespace FractalFun
 {
     /// <summary>
     /// A specialized simple editor for editing the json file PredefinedAttractors.json.
-    /// The editor should be reusabe as it loads a hard coded file, allows editing and 
-    /// the ability to save the file. When the editor is exited (runs as a modal dialog)
+    /// The editor should be reusabe as it loads a file passed in the constructor... 
+    /// this allows editing and the ability to save the file. 
+    /// When the editor is exited (runs as a modal dialog)
     /// the file is reprocessed and used to load the dropdown in the Attractory form.
     /// </summary>
     public partial class EditPredef : Form
     {
+        private string PredefineFile = "";
         /// <summary>
         /// Initialize the form... nothing to see here... move along
         /// </summary>
-        public EditPredef()
+        public EditPredef(string PredefFile)
         {
             InitializeComponent();
+            PredefineFile = PredefFile;
         }
 
         /// <summary>
@@ -38,9 +41,7 @@ namespace FractalFun
         private void EditPredef_Load(object sender, EventArgs e)
         {
             TxtEdit.Clear();
-            // At some point in the future, this will get the filename from the 
-            // parent form since hard coding is almost evil :)
-            using (StreamReader r = new StreamReader("PredefinedAttractors.json"))
+            using (StreamReader r = new StreamReader(PredefineFile))
             {
                 string json = r.ReadToEnd();
                 TxtEdit.Text = json;
@@ -50,7 +51,7 @@ namespace FractalFun
         }
 
         /// <summary>
-        /// Save whatever edits we may have been made... again with the hardcoded 
+        /// Save whatever edits we may have been made 
         /// filename
         /// </summary>
         /// <param name="sender">Save button</param>
@@ -58,7 +59,7 @@ namespace FractalFun
         private void ToolStripButton1_Click(object sender, EventArgs e)
         {
             string json = TxtEdit.Text;
-            using (StreamWriter j = new StreamWriter("PredefinedAttractors.json", false))
+            using (StreamWriter j = new StreamWriter(PredefineFile, false))
             {
                 j.Write(json);
                 j.Flush();

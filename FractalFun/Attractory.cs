@@ -9,7 +9,7 @@ using System.Windows.Forms;
 /// FractalFun.Attractory
 /// 
 /// Creates attractors based on the code described in the book 
-/// "Chaos In Wonderland" by Clifford A. Pickover pg 267 M.2
+/// "Chaos In Wonderland" by Clifford A. Pickover, 1994, pg 267 M.2
 /// 
 /// Changes:
 /// 
@@ -60,6 +60,7 @@ namespace FractalFun
         private bool HitTheBrakes_ = false;     // Stop render if true
         private bool looping_ = false;          // Doing multiple images if true
         private string BasePath = "";           // Location to save files
+        private string PredefinesFile = "PredefinedAttractors.json";    // Name of the predefines file
 
         /// <summary>
         /// Parameters (see above for the objects encapsulated below)
@@ -93,6 +94,7 @@ namespace FractalFun
         public bool HitTheBrakes { get => HitTheBrakes_; set => HitTheBrakes_ = value; }
         public bool IsLooping { get => looping_; set => looping_ = value; }
         public string BasePath1 { get => BasePath; set => BasePath = value; }
+        public string PredefinesFile1 { get => PredefinesFile; set => PredefinesFile = value; }
 
         public List<Attractor> Attractors;
 
@@ -228,7 +230,7 @@ namespace FractalFun
         /// <param name="e">Event args</param>
         private void BtnEdit_Click(object sender, EventArgs e)
         {
-            EditPredef EditForm = new EditPredef();
+            EditPredef EditForm = new EditPredef(PredefinesFile1);
             EditForm.ShowDialog();
             LoadPredefines();
         }
@@ -541,7 +543,7 @@ namespace FractalFun
 
             if (Step > 0.0)
             {
-                for (double Frame = Begin; Frame <= End; Frame = Frame + Step)
+                for (double Frame = Begin; Frame <= End; Frame += Step)
                 {
                     IFrame++;
                     TxtFrame.Text = IFrame.ToString() + " (" + Frame.ToString() + ")";
@@ -573,7 +575,7 @@ namespace FractalFun
             }
             else
             {
-                for (double Frame = Begin; Frame >= End; Frame = Frame - Step)
+                for (double Frame = Begin; Frame >= End; Frame -= Step)
                 {
                     IFrame++;
                     TxtFrame.Text = IFrame.ToString() + " (" + Frame.ToString() + ")";
