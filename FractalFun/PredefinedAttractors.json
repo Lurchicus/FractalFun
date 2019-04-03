@@ -1,0 +1,138 @@
+[
+  // The majority of the data for this structure is from the book
+  // "Chaos in Wonderland" by Clifford A. Pickover, 1994 
+  // from page 213, Appendix b.2 "Some Figure Parameters and 
+  // Descriptions"
+  //
+  // id -       lookup id (selected by dropdown)
+  // name -     A name for the predefine
+  // lyap       Lyapunof cooeficient (not currently used)
+  // a -        "A" parameter
+  // b -        "B" parameter
+  // c -        "C" parameter (optional)
+  // d -        "D" parameter (optional)
+  // mut -      Mutation (attractor classification)
+  // scale -    Scale factor (arbitrary based on a size of n x n)
+  //
+  {
+    "id": "1",
+    "name": "Kings Dream",
+    "lyap": "0.486991",
+    "a": "-0.966918",
+    "b": "2.879879",
+    "c": "0.765145",
+    "d": "0.744728",
+    "mut": "Standard",
+    "scale": "320"
+  },
+  {
+    "id": "2",
+    "name": "First Lord (Lord 1)",
+    "lyap": "0.986274",
+    "a": "-2.905148",
+    "b": "-2.030427",
+    "c": "1.440550",
+    "d": "0.703070",
+    "mut": "Standard",
+    "scale": "300"
+  },
+  {
+    "id": "3",
+    "name": "Lord Too (Lord 2)",
+    "lyap": "0.833576",
+    "a": "-2.951292",
+    "b": "1.187750",
+    "c": "0.517396",
+    "d": "1.090625",
+    "mut": "Standard",
+    "scale": "242"
+  },
+  {
+    "id": "4",
+    "name": "Lord Trey (Lord 3)",
+    "lyap": "0.510855",
+    "a": "2.668752",
+    "b": "1.225105",
+    "c": "0.709998",
+    "d": "0.637272",
+    "mut": "Standard",
+    "scale": "300"
+  },
+  {
+    "id": "5",
+    "name": "Lord Froth (Lord 4)",
+    "lyap": "0.987196",
+    "a": "1.380932",
+    "b": "2.656301",
+    "c": "1.157857",
+    "d": "1.272576",
+    "mut": "Standard",
+    "scale": "220"
+  },
+  {
+    "id": "6",
+    "name": "Lord Firth (Lord 5)",
+    "lyap": "1.0",
+    "a": "1.0",
+    "b": "1.0",
+    "c": "1.0",
+    "d": "1.0",
+    "mut": "Standard",
+    "scale": "300"
+  },
+  {
+    "id": "7",
+    "name": "Lord Sax (Lord 6)",
+    "lyap": "1.0",
+    "a": "1.0",
+    "b": "1.0",
+    "c": "1.0",
+    "d": "1.0",
+    "mut": "Standard",
+    "scale": "300"
+  },
+  {
+    "id": "8",
+    "name": "Serf Abe (Serf 1)",
+    "lyap": "1.0",
+    "a": "1.0",
+    "b": "1.0",
+    "c": "1.0",
+    "d": "1.0",
+    "mut": "Standard",
+    "scale": "300"
+  },
+  {
+    "id": "9",
+    "name": "Serf Bil (Serf 2)",
+    "lyap": "1.0",
+    "a": "1.0",
+    "b": "1.0",
+    "c": "1.0",
+    "d": "1.0",
+    "mut": "Standard",
+    "scale": "300"
+  },
+  {
+    "id": "10",
+    "name": "Serf Cal (Serf 3)",
+    "lyap": "1.0",
+    "a": "1.0",
+    "b": "1.0",
+    "c": "1.0",
+    "d": "1.0",
+    "mut": "Standard",
+    "scale": "300"
+  },
+  {
+    "id": "11",
+    "name": "Meh",
+    "lyap": "1.0",
+    "a": "1.0",
+    "b": "1.0",
+    "c": "1.0",
+    "d": "1.0",
+    "mut": "Meh",
+    "scale": "300"
+  }
+]
