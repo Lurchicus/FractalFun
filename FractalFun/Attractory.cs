@@ -9,7 +9,8 @@ using System.Windows.Forms;
 /// FractalFun.Attractory
 /// 
 /// Creates attractors based on the code described in the book 
-/// "Chaos In Wonderland" by Clifford A. Pickover, 1994, pg 267 M.2
+/// "Chaos In Wonderland" by Clifford A. Pickover, 1994, pg 267 M.2,
+/// ISBN 0-312-10743-9
 /// 
 /// Changes:
 /// 
@@ -23,6 +24,8 @@ using System.Windows.Forms;
 /// 3/22/2019 DWR Refined the looping support
 /// 1.1.15.0      1. For looping mode added a folder dialog to set where we
 ///                  we are going to save files
+/// 4/15/2019 DWR Expanded the comments in much of the program 
+/// 1.1.17.0
 ///              
 /// </summary>
 namespace FractalFun
@@ -521,7 +524,11 @@ namespace FractalFun
         }
 
         /// <summary>
-        /// Loop through all renders
+        /// Loop through all renders... this actually means iterate one of
+        /// the four parameters through a UI defined range, incrementing (or 
+        /// decrementing) by the UI supplied step value. If more than one
+        /// range is supplied, we will use the first range found and ignore 
+        /// any others (really should have called this DoRangeRender)
         /// </summary>
         /// <param name="A">A1</param>
         /// <param name="B">B1</param>
@@ -610,8 +617,9 @@ namespace FractalFun
         }
 
         /// <summary>
-        /// Render an image with the current parameters, if looping one
-        /// of the parameters will be the current loop value
+        /// Render an image with the current parameters, if looping, I.E.
+        /// stepping through a parameter range, one  of the parameters 
+        /// will be the current loop value
         /// </summary>
         /// <param name="A">A1</param>
         /// <param name="B">B1</param>
@@ -651,11 +659,15 @@ namespace FractalFun
                 double ys;
                 double i = 0.0;
 
+                // Render 10 million iterations
                 for (Int64 n = 1; n <= 10000000; n++)
                 {
                     i = n;
 
-                    // Calculate new XY coordinates
+                    // Calculate new XY coordinates (of note, the rendered 
+                    // images from the calculation below appear to be 
+                    // rotated 90 degrees and backwards when compared to the
+                    // images in Pickover's book)
                     xn = Math.Sin(y * B) + C * Math.Sin(x * B);
                     yn = Math.Sin(x * A) + D * Math.Sin(y * A);
 
@@ -663,7 +675,14 @@ namespace FractalFun
                     x = xn;
                     y = yn;
 
-                    // Scale the coordinates (scale then center)
+                    // Scale the coordinates (scale then center). The scaling
+                    // is a little odd since I don't know Max Width 1 until 
+                    // the render has completed. As a result, I apply a 
+                    // predefined scale factor for x and y (determined from a 
+                    // previous render) and then center the result on our
+                    // 1025 by 1337 default bitmap (varies based on maximized
+                    // screen size). The scale factor comes from the UI or the
+                    // predefines JSON file.
                     xs = (x * IScale) + (W1 / 2.0);
                     ys = (y * IScale) + (H1 / 2.0);
 
@@ -676,7 +695,10 @@ namespace FractalFun
                     // If the coordinate is in bounds, plot it
                     if (xs >= 0 && xs <= W1 && ys >= 0 && ys <= H1)
                     {
+                        // As we plot, check for a previous pixel and color the 
+                        // new pixel appropriatrely
                         Paper.SetPixel((int)xs, (int)ys, GetColor(xs, ys, Paper));
+
                         // Every 1000 iterations, update the UI
                         if ((int)n % 1000 == 0)
                         {
@@ -706,6 +728,7 @@ namespace FractalFun
                 Application.DoEvents();
                 ICanHazResize = true;
             }
+            // Don't reset the brakes unless we are not looping
             if (!IsLooping) { HitTheBrakes = false; }
         }
 

@@ -1,12 +1,12 @@
 [
   // The majority of the data for this structure is from the book
   // "Chaos in Wonderland" by Clifford A. Pickover, 1994 
-  // from page 213, Appendix b.2 "Some Figure Parameters and 
-  // Descriptions"
+  // from page 213, Appendix b.2 ISBN 0-312-10743-9, "Some Figure 
+  // Parameters and Descriptions"
   //
   // id -       lookup id (selected by dropdown)
-  // name -     A name for the predefine
-  // lyap       Lyapunof cooeficient (not currently used)
+  // name -     A unique name for the predefine
+  // lyap -     Lyapunof cooeficient (not currently used)
   // a -        "A" parameter
   // b -        "B" parameter
   // c -        "C" parameter (optional)
@@ -34,7 +34,7 @@
     "c": "1.440550",
     "d": "0.703070",
     "mut": "Standard",
-    "scale": "300"
+    "scale": "270"
   },
   {
     "id": "3",
