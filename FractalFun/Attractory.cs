@@ -26,6 +26,23 @@ using System.Windows.Forms;
 ///                  we are going to save files
 /// 4/15/2019 DWR Expanded the comments in much of the program 
 /// 1.1.17.0
+/// 4/17/2019 DWR 1. Allow looping without a file save in the path is null 
+/// 1.1.18.0         (path dialog canceled) and added more comments where
+///                  I felt it was appropriate. Added a todo/bug list
+///                  
+/// ToDo:
+/// 1. Determine if a break during looping kills the whole
+///    series or just the current render. Currently it just
+///    affects the current render. Maybe a checkbox to set
+///    the break option? TBD
+/// 2. There is a need for a help screen... for example, we
+///    need to inform the user that after any UI changes, 
+///    they should hit reset... on the other hand, if I quit
+///    being lazy and add an event handler for all the 
+///    changeable UI elements, I could handle this internally.
+/// 3. Need to add the GNU license and a simple viewer so the
+///    user can read it if they want (form with a read only
+///    text box on it).
 ///              
 /// </summary>
 namespace FractalFun
@@ -223,6 +240,16 @@ namespace FractalFun
             TxtB.Text = Attractors[NewID].b.ToString();
             TxtC.Text = Attractors[NewID].c.ToString();
             TxtD.Text = Attractors[NewID].d.ToString();
+            // Also clear any range leftovers that may remain
+            AEnd1 = 0.0; TxtAEnd.Text = AEnd1.ToString();
+            BEnd1 = 0.0; TxtBEnd.Text = BEnd1.ToString();
+            CEnd1 = 0.0; TxtCEnd.Text = CEnd1.ToString();
+            DEnd1 = 0.0; TxtDEnd.Text = DEnd1.ToString();
+            AStep1 = 0.0; TxtAStep.Text = AStep1.ToString();
+            BStep1 = 0.0; TxtBStep.Text = BStep1.ToString();
+            CStep1 = 0.0; TxtCStep.Text = CStep1.ToString();
+            DStep1 = 0.0; TxtDStep.Text = DStep1.ToString();
+            // Allow the UI to update
             Application.DoEvents();
         }
 
@@ -304,6 +331,7 @@ namespace FractalFun
             TxtMaxX.Text = MaxX.ToString();
             TxtMinY.Text = MinY.ToString();
             TxtMaxY.Text = MaxY.ToString();
+            //TxtFrame.Text = "";
 
             // Some more UI housekeeping
             Display.Refresh();
@@ -513,13 +541,15 @@ namespace FractalFun
         /// <summary>
         /// Get the index so we know if we are looping on A, B, C or D
         /// </summary>
-        /// <returns>1 through 4 (for A through D)</returns>
+        /// <returns>1 through 4 (for A through D) or 0 for none</returns>
         public int GetParamIndex()
         {
+            // There can be only one! 
             if (AStep1 != 0.0) { return 1; }
             if (BStep1 != 0.0) { return 2; }
             if (CStep1 != 0.0) { return 3; }
             if (DStep1 != 0.0) { return 4; }
+            // Okay, so there can be none too...
             return 0;
         }
 
@@ -541,15 +571,24 @@ namespace FractalFun
             double End = GetEnd();
             double Step = GetStep();
 
+            // Find out where we want to save image files
             SetSaveFolder.Description = "Set file save path";
             if (SetSaveFolder.ShowDialog() == DialogResult.OK)
             {
                 BasePath1 = SetSaveFolder.SelectedPath;
             }
+            else
+            {
+                // Skip logging and file save
+                BasePath1 = null;
+            }
+
+            // determine which range will we be using
             int PIndex = GetParamIndex();
 
             if (Step > 0.0)
             {
+                IsLooping = true;
                 for (double Frame = Begin; Frame <= End; Frame += Step)
                 {
                     IFrame++;
@@ -577,6 +616,7 @@ namespace FractalFun
                             break;
                     }
                     DoReset();
+                    // See if they hit the brakes
                     if (HitTheBrakes) { break; }
                 }
             }
@@ -609,9 +649,11 @@ namespace FractalFun
                             break;
                     }
                     DoReset();
+                    // See if they hit the brakes
                     if (HitTheBrakes) { break; }
                 }
             }
+            // Reset the brakes
             HitTheBrakes = false;
             Application.DoEvents();
         }
@@ -651,23 +693,23 @@ namespace FractalFun
                 Application.DoEvents();
 
                 // Init a few working variables
-                double x = 0.1;
-                double y = 0.1;
-                double xn;
-                double yn;
-                double xs;
-                double ys;
-                double i = 0.0;
+                double x = 0.1; // x coordinate
+                double y = 0.1; // y coordinate
+                double xn;      // new x coordinate
+                double yn;      // new y coordinate
+                double xs;      // scaled x coordinate
+                double ys;      // scaled y coordinate
+                double i = 0.0; // iteration counter
 
                 // Render 10 million iterations
                 for (Int64 n = 1; n <= 10000000; n++)
                 {
-                    i = n;
+                    i = (double)n;
 
                     // Calculate new XY coordinates (of note, the rendered 
                     // images from the calculation below appear to be 
-                    // rotated 90 degrees and backwards when compared to the
-                    // images in Pickover's book)
+                    // rotated 90 degrees and mirrored when compared to the
+                    // images in Pickover's "Chaos In Wonderland" book)
                     xn = Math.Sin(y * B) + C * Math.Sin(x * B);
                     yn = Math.Sin(x * A) + D * Math.Sin(y * A);
 
@@ -699,7 +741,7 @@ namespace FractalFun
                         // new pixel appropriatrely
                         Paper.SetPixel((int)xs, (int)ys, GetColor(xs, ys, Paper));
 
-                        // Every 1000 iterations, update the UI
+                        // Every 1000 iterations, update the UI and bitmap display
                         if ((int)n % 1000 == 0)
                         {
                             // Update the UI
@@ -715,7 +757,7 @@ namespace FractalFun
                     // See if we should stop the render early
                     if (HitTheBrakes) { break; }
                 }
-                // Final post render UI update
+                // Final post render UI and bitmap display update
                 TxtIteration.Text = i.ToString();
                 Display.Image = Paper;
                 TxtMinX.Text = MinX.ToString();
@@ -728,7 +770,8 @@ namespace FractalFun
                 Application.DoEvents();
                 ICanHazResize = true;
             }
-            // Don't reset the brakes unless we are not looping
+            // Only reset the brakes if we are not looping, otherwise let
+            // the looping process (DoLoopRender) detect and clear the brake
             if (!IsLooping) { HitTheBrakes = false; }
         }
 
@@ -759,17 +802,17 @@ namespace FractalFun
             Color got = image.GetPixel((int)x, (int)y);
 
             // Break out the current pixel color info
-            byte r = got.R;
-            byte g = got.G;
-            byte b = got.B;
-            byte a = got.A;
+            byte r = got.R; // Red
+            byte g = got.G; // Blue
+            byte b = got.B; // Green
+            byte a = got.A; // Alpha channel
 
             // If we are brighter than black, darken
             if (r > Lo.R) { r--; }
             if (g > Lo.G) { g--; }
             if (b > Lo.B) { b--; }
 
-            // If we are brighter than lighter gray, bump to lighter gray
+            // If we are brighter than lighter gray (0xFFE8E8E8), bump to lighter gray
             if (r > Hi.R) { r = Hi.R; }
             if (g > Hi.G) { g = Hi.G; }
             if (b > Hi.B) { b = Hi.B; }
@@ -779,7 +822,7 @@ namespace FractalFun
             if (g <= Lo.G) { g = Lo.G; }
             if (b <= Lo.B) { b = Lo.B; }
 
-            // Reassemble and return the new color
+            // Reassemble the RGB and return the new color
             return Color.FromArgb((int)a, (int)r, (int)g, (int)b);
         }
 
@@ -794,23 +837,36 @@ namespace FractalFun
         public void DoSaveFile(int Frame, double A, double B, double C, double D)
         {
             string SaveFile = "";
+
+            // Get the current date and time and format so we can use it in a 
+            // filename
             DateTime NowLocal = DateTime.Now;
             string Frac2 = FormatDT(NowLocal);
 
             if (!IsLooping)
             {
+                // If we are not looping, use a normal save file dialog
+                // - Build the rest of the fileme and prep the dialog
                 SaveFractal.FileName = "Attractor " + TxtName.Text + " " + Frac2 + ".png";
                 SaveFractal.Title = "Save image to file";
                 if (SaveFractal.ShowDialog() == DialogResult.OK)
                 {
                     SaveFile = SaveFractal.FileName;
                 }
+                else
+                {
+                    return;
+                }
             }
             else
             {
-                //string Path = System.IO.Path.GetDirectoryName(SaveFractal.FileName);
+                // Skip file and log save if a path was not supplied
+                if (BasePath1 == null) { return; }
+
+                // Otherwise assemble the filename
                 SaveFile = BasePath1 + "\\" + "Attractor " + TxtName.Text + "-F" + Frame.ToString() + " " + Frac2 + ".png";
             }
+            // Save the bitmap as a 32 bit PNG file and update the save log
             Display.Image.Save(SaveFile, System.Drawing.Imaging.ImageFormat.Png);
             SaveLog(SaveFile, A, B, C, D);
         }
@@ -869,7 +925,6 @@ namespace FractalFun
             F.WriteLine(LogLine);
             F.Flush();
             F.Close();
-            //F.Dispose();
         }
     }
 
