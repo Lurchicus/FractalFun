@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using System;
+using System.Media;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
@@ -10,7 +11,7 @@ using System.Windows.Forms;
 /// 
 /// Creates attractors based on the code described in the book 
 /// "Chaos In Wonderland" by Clifford A. Pickover, 1994, pg 267 M.2,
-/// ISBN 0-312-10743-9
+/// ISBN 0-312-10743-9 as well as adhoc or original predefined attractors
 /// 
 /// Changes:
 /// 
@@ -22,15 +23,28 @@ using System.Windows.Forms;
 /// 3/21/2019 DWR Added UI elements to suport rendering multiple images
 /// 1.1.14.0
 /// 3/22/2019 DWR Refined the looping support
-/// 1.1.15.0      1. For looping mode added a folder dialog to set where we
-///                  we are going to save files
+/// 1.1.15.0      For looping mode added a folder dialog to set where we
+///               we are going to save files
 /// 4/15/2019 DWR Expanded the comments in much of the program 
 /// 1.1.17.0
-/// 4/17/2019 DWR 1. Allow looping without a file save in the path is null 
-/// 1.1.18.0         (path dialog canceled) and added more comments where
-///                  I felt it was appropriate. Added a todo/bug list
-///                  
-/// ToDo:
+/// 4/17/2019 DWR Allow looping without a file save in the path is null 
+/// 1.1.18.0      (path dialog canceled) and added more comments where
+///               I felt it was appropriate. Added a todo/bug list
+/// 4/20/2019 DWR Locked buttons to the bottom of the form and added a 
+/// 1.1.19.0      checkbox to set a break all renders (with the default
+///               being break current render) when the "Break" button is
+///               checked. Added a property to follow the break mode.
+///               - Resolves issue 1
+/// 4/20/2019 DWR I added an event handler to all of the editable text
+/// 1.1.20.0      boxes. It triggers on Focus leaving the control so 
+///               for the moment, no help screen needed for the "Reset"
+///               button now. The readonly text boxes can be safely
+///               ignored.
+///               - Resolves issue 2
+///               I also added code to validate the textbox contents... 
+///               using CheckD (double check) and CheckI (integer check)
+/// 
+/// Resolved:
 /// 1. Determine if a break during looping kills the whole
 ///    series or just the current render. Currently it just
 ///    affects the current render. Maybe a checkbox to set
@@ -40,6 +54,8 @@ using System.Windows.Forms;
 ///    they should hit reset... on the other hand, if I quit
 ///    being lazy and add an event handler for all the 
 ///    changeable UI elements, I could handle this internally.
+///    
+/// ToDo:
 /// 3. Need to add the GNU license and a simple viewer so the
 ///    user can read it if they want (form with a read only
 ///    text box on it).
@@ -81,6 +97,7 @@ namespace FractalFun
         private bool looping_ = false;          // Doing multiple images if true
         private string BasePath = "";           // Location to save files
         private string PredefinesFile = "PredefinedAttractors.json";    // Name of the predefines file
+        private bool BreakAll_ = false;         // If true, the break button stops all renders
 
         /// <summary>
         /// Parameters (see above for the objects encapsulated below)
@@ -115,6 +132,7 @@ namespace FractalFun
         public bool IsLooping { get => looping_; set => looping_ = value; }
         public string BasePath1 { get => BasePath; set => BasePath = value; }
         public string PredefinesFile1 { get => PredefinesFile; set => PredefinesFile = value; }
+        public bool BreakAll { get => BreakAll_; set => BreakAll_ = value; }
 
         public List<Attractor> Attractors;
 
@@ -152,6 +170,9 @@ namespace FractalFun
             IsLooping = false;
             IScale = 300;
             Name1 = "";
+
+            BreakAll = false;
+            CBXBreakMode.Checked = BreakAll;    // Defaults to off
 
             LoadPredefines();
 
@@ -250,6 +271,7 @@ namespace FractalFun
             CStep1 = 0.0; TxtCStep.Text = CStep1.ToString();
             DStep1 = 0.0; TxtDStep.Text = DStep1.ToString();
             // Allow the UI to update
+            DoReset();
             Application.DoEvents();
         }
 
@@ -263,6 +285,23 @@ namespace FractalFun
             EditPredef EditForm = new EditPredef(PredefinesFile1);
             EditForm.ShowDialog();
             LoadPredefines();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void CBXBreakMode_CheckedChanged(object sender, EventArgs e)
+        {
+            if (CBXBreakMode.Checked)
+            {
+                BreakAll = true;
+            }
+            else
+            {
+                BreakAll = false;
+            }
         }
 
         /// <summary>
@@ -436,7 +475,7 @@ namespace FractalFun
 
             // Some UI housekeeping
             btnSave.Enabled = false;
-            HitTheBrakes = false;
+            if (!BreakAll) HitTheBrakes = false;
             TxtIteration.Text = "0";
             timer1.Enabled = true;
             Application.DoEvents();
@@ -899,7 +938,6 @@ namespace FractalFun
         public void SaveLog(string LogFile, double A, double B, double C, double D)
         {
             string LogName = "";
-            string LogLine = "";
 
             // Scan backwards for the end of the path
             for (int ix = LogFile.Length - 1; ix > 0; ix--)
@@ -916,7 +954,7 @@ namespace FractalFun
             StreamWriter F = new StreamWriter(LogName, true);
 
             // Build output record and write to file
-            LogLine = A.ToString() + "," +
+            string LogLine = A.ToString() + "," +
                       B.ToString() + "," +
                       C.ToString() + "," +
                       D.ToString() + "," +
@@ -925,6 +963,128 @@ namespace FractalFun
             F.WriteLine(LogLine);
             F.Flush();
             F.Close();
+        }
+
+        /// <summary>
+        /// Try to convert the string passed to a double. If it's okay, pass
+        /// the value back, otherwise beep and pass back "0.0"
+        /// </summary>
+        /// <param name="Value">a string</param>
+        /// <returns>s string</returns>
+        public string CheckD(string Value)
+        {
+            try
+            {
+                double D = Convert.ToDouble(Value);
+                return Value;
+            }
+            catch {
+                SystemSounds.Beep.Play();
+                return "0.0";
+            }
+        }
+
+        /// <summary>
+        /// Try to convert the string passed to an integer. If it's okay, pass
+        /// the value back, otherwise beep and pass back "0.0"
+        /// </summary>
+        /// <param name="Value">a string</param>
+        /// <returns>s string</returns>
+        public string CheckI(string Value)
+        {
+            try
+            {
+                double D = Convert.ToInt32(Value);
+                return Value;
+            }
+            catch
+            {
+                SystemSounds.Beep.Play();
+                return "0";
+            }
+        }
+
+        private void TxtA_Leave(object sender, EventArgs e)
+        {
+            TxtA.Text = CheckD(TxtA.Text);
+            DoReset();
+        }
+
+        private void TxtB_Leave(object sender, EventArgs e)
+        {
+            TxtB.Text = CheckD(TxtB.Text);
+            DoReset();
+        }
+
+        private void TxtC_Leave(object sender, EventArgs e)
+        {
+            TxtC.Text = CheckD(TxtC.Text);
+            DoReset();
+        }
+
+        private void TxtD_Leave(object sender, EventArgs e)
+        {
+            TxtD.Text = CheckD(TxtD.Text);
+            DoReset();
+        }
+
+        private void TxtAEnd_Leave(object sender, EventArgs e)
+        {
+            TxtAEnd.Text = CheckD(TxtAEnd.Text);
+            DoReset();
+        }
+
+        private void TxtBEnd_Leave(object sender, EventArgs e)
+        {
+            TxtBEnd.Text = CheckD(TxtBEnd.Text);
+            DoReset();
+        }
+
+        private void TxtCEnd_Leave(object sender, EventArgs e)
+        {
+            TxtCEnd.Text = CheckD(TxtCEnd.Text);
+            DoReset();
+        }
+
+        private void TxtDEnd_Leave(object sender, EventArgs e)
+        {
+            TxtDEnd.Text = CheckD(TxtDEnd.Text);
+            DoReset();
+        }
+
+        private void TxtAStep_Leave(object sender, EventArgs e)
+        {
+            TxtAStep.Text = CheckD(TxtAStep.Text);
+            DoReset();
+        }
+
+        private void TxtBStep_Leave(object sender, EventArgs e)
+        {
+            TxtBStep.Text = CheckD(TxtBStep.Text);
+            DoReset();
+        }
+
+        private void TxtCStep_Leave(object sender, EventArgs e)
+        {
+            TxtCStep.Text = CheckD(TxtCStep.Text);
+            DoReset();
+        }
+
+        private void TxtDStep_Leave(object sender, EventArgs e)
+        {
+            TxtDStep.Text = CheckD(TxtDStep.Text);
+            DoReset();
+        }
+
+        private void TxtScale_Leave(object sender, EventArgs e)
+        {
+            TxtScale.Text = CheckI(TxtScale.Text);
+            DoReset();
+        }
+
+        private void TxtName_Leave(object sender, EventArgs e)
+        {
+            DoReset();
         }
     }
 

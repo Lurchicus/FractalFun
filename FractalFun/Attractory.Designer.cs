@@ -30,6 +30,8 @@
         {
             this.components = new System.ComponentModel.Container();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+            this.CBXBreakMode = new System.Windows.Forms.CheckBox();
+            this.BtnEdit = new System.Windows.Forms.Button();
             this.label18 = new System.Windows.Forms.Label();
             this.TxtFrame = new System.Windows.Forms.TextBox();
             this.label17 = new System.Windows.Forms.Label();
@@ -79,7 +81,6 @@
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.SaveFractal = new System.Windows.Forms.SaveFileDialog();
             this.SetSaveFolder = new System.Windows.Forms.FolderBrowserDialog();
-            this.BtnEdit = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -100,6 +101,7 @@
             // splitContainer1.Panel1
             // 
             this.splitContainer1.Panel1.BackColor = System.Drawing.SystemColors.GradientActiveCaption;
+            this.splitContainer1.Panel1.Controls.Add(this.CBXBreakMode);
             this.splitContainer1.Panel1.Controls.Add(this.BtnEdit);
             this.splitContainer1.Panel1.Controls.Add(this.label18);
             this.splitContainer1.Panel1.Controls.Add(this.TxtFrame);
@@ -150,9 +152,30 @@
             // splitContainer1.Panel2
             // 
             this.splitContainer1.Panel2.Controls.Add(this.Display);
-            this.splitContainer1.Size = new System.Drawing.Size(826, 318);
+            this.splitContainer1.Size = new System.Drawing.Size(826, 356);
             this.splitContainer1.SplitterDistance = 337;
             this.splitContainer1.TabIndex = 0;
+            // 
+            // CBXBreakMode
+            // 
+            this.CBXBreakMode.AutoSize = true;
+            this.CBXBreakMode.Location = new System.Drawing.Point(63, 285);
+            this.CBXBreakMode.Name = "CBXBreakMode";
+            this.CBXBreakMode.Size = new System.Drawing.Size(133, 17);
+            this.CBXBreakMode.TabIndex = 104;
+            this.CBXBreakMode.Text = "Break stops all renders";
+            this.CBXBreakMode.UseVisualStyleBackColor = true;
+            this.CBXBreakMode.CheckedChanged += new System.EventHandler(this.CBXBreakMode_CheckedChanged);
+            // 
+            // BtnEdit
+            // 
+            this.BtnEdit.Location = new System.Drawing.Point(254, 9);
+            this.BtnEdit.Name = "BtnEdit";
+            this.BtnEdit.Size = new System.Drawing.Size(75, 23);
+            this.BtnEdit.TabIndex = 103;
+            this.BtnEdit.Text = "Edit";
+            this.BtnEdit.UseVisualStyleBackColor = true;
+            this.BtnEdit.Click += new System.EventHandler(this.BtnEdit_Click);
             // 
             // label18
             // 
@@ -188,6 +211,7 @@
             this.TxtDStep.Size = new System.Drawing.Size(50, 20);
             this.TxtDStep.TabIndex = 18;
             this.TxtDStep.Text = "0.0";
+            this.TxtDStep.Leave += new System.EventHandler(this.TxtDStep_Leave);
             // 
             // TxtCStep
             // 
@@ -196,6 +220,7 @@
             this.TxtCStep.Size = new System.Drawing.Size(50, 20);
             this.TxtCStep.TabIndex = 16;
             this.TxtCStep.Text = "0.0";
+            this.TxtCStep.Leave += new System.EventHandler(this.TxtCStep_Leave);
             // 
             // TxtDEnd
             // 
@@ -204,6 +229,7 @@
             this.TxtDEnd.Size = new System.Drawing.Size(100, 20);
             this.TxtDEnd.TabIndex = 17;
             this.TxtDEnd.Text = "0.0";
+            this.TxtDEnd.Leave += new System.EventHandler(this.TxtDEnd_Leave);
             // 
             // TxtCEnd
             // 
@@ -212,6 +238,7 @@
             this.TxtCEnd.Size = new System.Drawing.Size(100, 20);
             this.TxtCEnd.TabIndex = 15;
             this.TxtCEnd.Text = "0.0";
+            this.TxtCEnd.Leave += new System.EventHandler(this.TxtCEnd_Leave);
             // 
             // TxtBStep
             // 
@@ -220,6 +247,7 @@
             this.TxtBStep.Size = new System.Drawing.Size(50, 20);
             this.TxtBStep.TabIndex = 14;
             this.TxtBStep.Text = "0.0";
+            this.TxtBStep.Leave += new System.EventHandler(this.TxtBStep_Leave);
             // 
             // TxtBEnd
             // 
@@ -228,6 +256,7 @@
             this.TxtBEnd.Size = new System.Drawing.Size(100, 20);
             this.TxtBEnd.TabIndex = 13;
             this.TxtBEnd.Text = "0.0";
+            this.TxtBEnd.Leave += new System.EventHandler(this.TxtBEnd_Leave);
             // 
             // label16
             // 
@@ -245,6 +274,7 @@
             this.TxtAStep.Size = new System.Drawing.Size(50, 20);
             this.TxtAStep.TabIndex = 12;
             this.TxtAStep.Text = "0.0";
+            this.TxtAStep.Leave += new System.EventHandler(this.TxtAStep_Leave);
             // 
             // label15
             // 
@@ -262,6 +292,7 @@
             this.TxtAEnd.Size = new System.Drawing.Size(100, 20);
             this.TxtAEnd.TabIndex = 11;
             this.TxtAEnd.Text = "0.0";
+            this.TxtAEnd.Leave += new System.EventHandler(this.TxtAEnd_Leave);
             // 
             // label14
             // 
@@ -297,6 +328,7 @@
             this.TxtName.Name = "TxtName";
             this.TxtName.Size = new System.Drawing.Size(100, 20);
             this.TxtName.TabIndex = 6;
+            this.TxtName.Leave += new System.EventHandler(this.TxtName_Leave);
             // 
             // label12
             // 
@@ -314,6 +346,7 @@
             this.TxtScale.Size = new System.Drawing.Size(100, 20);
             this.TxtScale.TabIndex = 5;
             this.TxtScale.Text = "0";
+            this.TxtScale.Leave += new System.EventHandler(this.TxtScale_Leave);
             // 
             // label11
             // 
@@ -335,8 +368,9 @@
             // 
             // btnSave
             // 
+            this.btnSave.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.btnSave.Enabled = false;
-            this.btnSave.Location = new System.Drawing.Point(254, 285);
+            this.btnSave.Location = new System.Drawing.Point(254, 320);
             this.btnSave.Name = "btnSave";
             this.btnSave.Size = new System.Drawing.Size(75, 23);
             this.btnSave.TabIndex = 10;
@@ -346,7 +380,8 @@
             // 
             // BtnBreak
             // 
-            this.BtnBreak.Location = new System.Drawing.Point(92, 285);
+            this.BtnBreak.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.BtnBreak.Location = new System.Drawing.Point(92, 320);
             this.BtnBreak.Name = "BtnBreak";
             this.BtnBreak.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
             this.BtnBreak.Size = new System.Drawing.Size(75, 23);
@@ -357,7 +392,8 @@
             // 
             // BtnReset
             // 
-            this.BtnReset.Location = new System.Drawing.Point(173, 285);
+            this.BtnReset.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.BtnReset.Location = new System.Drawing.Point(173, 320);
             this.BtnReset.Name = "BtnReset";
             this.BtnReset.Size = new System.Drawing.Size(75, 23);
             this.BtnReset.TabIndex = 9;
@@ -475,8 +511,9 @@
             // 
             // BtnRender
             // 
+            this.BtnRender.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.BtnRender.Enabled = false;
-            this.BtnRender.Location = new System.Drawing.Point(11, 285);
+            this.BtnRender.Location = new System.Drawing.Point(11, 320);
             this.BtnRender.Name = "BtnRender";
             this.BtnRender.Size = new System.Drawing.Size(75, 23);
             this.BtnRender.TabIndex = 7;
@@ -531,6 +568,7 @@
             this.TxtD.Size = new System.Drawing.Size(100, 20);
             this.TxtD.TabIndex = 4;
             this.TxtD.Text = "0.0";
+            this.TxtD.Leave += new System.EventHandler(this.TxtD_Leave);
             // 
             // TxtC
             // 
@@ -539,6 +577,7 @@
             this.TxtC.Size = new System.Drawing.Size(100, 20);
             this.TxtC.TabIndex = 3;
             this.TxtC.Text = "0.0";
+            this.TxtC.Leave += new System.EventHandler(this.TxtC_Leave);
             // 
             // TxtB
             // 
@@ -547,6 +586,7 @@
             this.TxtB.Size = new System.Drawing.Size(100, 20);
             this.TxtB.TabIndex = 2;
             this.TxtB.Text = "0.0";
+            this.TxtB.Leave += new System.EventHandler(this.TxtB_Leave);
             // 
             // TxtA
             // 
@@ -555,13 +595,14 @@
             this.TxtA.Size = new System.Drawing.Size(100, 20);
             this.TxtA.TabIndex = 1;
             this.TxtA.Text = "0.0";
+            this.TxtA.Leave += new System.EventHandler(this.TxtA_Leave);
             // 
             // Display
             // 
             this.Display.Dock = System.Windows.Forms.DockStyle.Fill;
             this.Display.Location = new System.Drawing.Point(0, 0);
             this.Display.Name = "Display";
-            this.Display.Size = new System.Drawing.Size(483, 316);
+            this.Display.Size = new System.Drawing.Size(483, 354);
             this.Display.TabIndex = 0;
             this.Display.TabStop = false;
             this.Display.SizeChanged += new System.EventHandler(this.Display_SizeChanged);
@@ -575,21 +616,11 @@
             // 
             this.SetSaveFolder.RootFolder = System.Environment.SpecialFolder.MyComputer;
             // 
-            // BtnEdit
-            // 
-            this.BtnEdit.Location = new System.Drawing.Point(254, 9);
-            this.BtnEdit.Name = "BtnEdit";
-            this.BtnEdit.Size = new System.Drawing.Size(75, 23);
-            this.BtnEdit.TabIndex = 103;
-            this.BtnEdit.Text = "Edit";
-            this.BtnEdit.UseVisualStyleBackColor = true;
-            this.BtnEdit.Click += new System.EventHandler(this.BtnEdit_Click);
-            // 
             // Attractory
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(826, 318);
+            this.ClientSize = new System.Drawing.Size(826, 356);
             this.Controls.Add(this.splitContainer1);
             this.Name = "Attractory";
             this.Text = "Attractor Exploder";
@@ -657,6 +688,7 @@
         private System.Windows.Forms.Label label18;
         private System.Windows.Forms.FolderBrowserDialog SetSaveFolder;
         private System.Windows.Forms.Button BtnEdit;
+        private System.Windows.Forms.CheckBox CBXBreakMode;
     }
 }
 
