@@ -81,6 +81,7 @@
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.SaveFractal = new System.Windows.Forms.SaveFileDialog();
             this.SetSaveFolder = new System.Windows.Forms.FolderBrowserDialog();
+            this.BtnLicense = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -101,6 +102,7 @@
             // splitContainer1.Panel1
             // 
             this.splitContainer1.Panel1.BackColor = System.Drawing.SystemColors.GradientActiveCaption;
+            this.splitContainer1.Panel1.Controls.Add(this.BtnLicense);
             this.splitContainer1.Panel1.Controls.Add(this.CBXBreakMode);
             this.splitContainer1.Panel1.Controls.Add(this.BtnEdit);
             this.splitContainer1.Panel1.Controls.Add(this.label18);
@@ -152,7 +154,7 @@
             // splitContainer1.Panel2
             // 
             this.splitContainer1.Panel2.Controls.Add(this.Display);
-            this.splitContainer1.Size = new System.Drawing.Size(826, 356);
+            this.splitContainer1.Size = new System.Drawing.Size(826, 379);
             this.splitContainer1.SplitterDistance = 337;
             this.splitContainer1.TabIndex = 0;
             // 
@@ -169,7 +171,8 @@
             // 
             // BtnEdit
             // 
-            this.BtnEdit.Location = new System.Drawing.Point(254, 9);
+            this.BtnEdit.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.BtnEdit.Location = new System.Drawing.Point(11, 314);
             this.BtnEdit.Name = "BtnEdit";
             this.BtnEdit.Size = new System.Drawing.Size(75, 23);
             this.BtnEdit.TabIndex = 103;
@@ -370,7 +373,7 @@
             // 
             this.btnSave.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.btnSave.Enabled = false;
-            this.btnSave.Location = new System.Drawing.Point(254, 320);
+            this.btnSave.Location = new System.Drawing.Point(254, 343);
             this.btnSave.Name = "btnSave";
             this.btnSave.Size = new System.Drawing.Size(75, 23);
             this.btnSave.TabIndex = 10;
@@ -381,7 +384,7 @@
             // BtnBreak
             // 
             this.BtnBreak.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.BtnBreak.Location = new System.Drawing.Point(92, 320);
+            this.BtnBreak.Location = new System.Drawing.Point(92, 343);
             this.BtnBreak.Name = "BtnBreak";
             this.BtnBreak.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
             this.BtnBreak.Size = new System.Drawing.Size(75, 23);
@@ -393,7 +396,7 @@
             // BtnReset
             // 
             this.BtnReset.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.BtnReset.Location = new System.Drawing.Point(173, 320);
+            this.BtnReset.Location = new System.Drawing.Point(173, 343);
             this.BtnReset.Name = "BtnReset";
             this.BtnReset.Size = new System.Drawing.Size(75, 23);
             this.BtnReset.TabIndex = 9;
@@ -448,7 +451,7 @@
             // 
             // TxtMaxX
             // 
-            this.TxtMaxX.Location = new System.Drawing.Point(227, 207);
+            this.TxtMaxX.Location = new System.Drawing.Point(226, 207);
             this.TxtMaxX.Name = "TxtMaxX";
             this.TxtMaxX.ReadOnly = true;
             this.TxtMaxX.Size = new System.Drawing.Size(99, 20);
@@ -513,7 +516,7 @@
             // 
             this.BtnRender.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.BtnRender.Enabled = false;
-            this.BtnRender.Location = new System.Drawing.Point(11, 320);
+            this.BtnRender.Location = new System.Drawing.Point(11, 343);
             this.BtnRender.Name = "BtnRender";
             this.BtnRender.Size = new System.Drawing.Size(75, 23);
             this.BtnRender.TabIndex = 7;
@@ -602,7 +605,7 @@
             this.Display.Dock = System.Windows.Forms.DockStyle.Fill;
             this.Display.Location = new System.Drawing.Point(0, 0);
             this.Display.Name = "Display";
-            this.Display.Size = new System.Drawing.Size(483, 354);
+            this.Display.Size = new System.Drawing.Size(483, 377);
             this.Display.TabIndex = 0;
             this.Display.TabStop = false;
             this.Display.SizeChanged += new System.EventHandler(this.Display_SizeChanged);
@@ -616,11 +619,22 @@
             // 
             this.SetSaveFolder.RootFolder = System.Environment.SpecialFolder.MyComputer;
             // 
+            // BtnLicense
+            // 
+            this.BtnLicense.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.BtnLicense.Location = new System.Drawing.Point(254, 314);
+            this.BtnLicense.Name = "BtnLicense";
+            this.BtnLicense.Size = new System.Drawing.Size(75, 23);
+            this.BtnLicense.TabIndex = 105;
+            this.BtnLicense.Text = "License";
+            this.BtnLicense.UseVisualStyleBackColor = true;
+            this.BtnLicense.Click += new System.EventHandler(this.BtnLicense_Click);
+            // 
             // Attractory
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(826, 356);
+            this.ClientSize = new System.Drawing.Size(826, 379);
             this.Controls.Add(this.splitContainer1);
             this.Name = "Attractory";
             this.Text = "Attractor Exploder";
@@ -689,6 +703,7 @@
         private System.Windows.Forms.FolderBrowserDialog SetSaveFolder;
         private System.Windows.Forms.Button BtnEdit;
         private System.Windows.Forms.CheckBox CBXBreakMode;
+        private System.Windows.Forms.Button BtnLicense;
     }
 }
 

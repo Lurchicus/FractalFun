@@ -43,6 +43,15 @@ using System.Windows.Forms;
 ///               - Resolves issue 2
 ///               I also added code to validate the textbox contents... 
 ///               using CheckD (double check) and CheckI (integer check)
+/// 4/20/2019 DWR Issue 3, added the GNU3 license text file to the 
+/// 1.1.21.0      project. Getting started on a new form to display the
+///               license text in a modal dialog. Finished up the file
+///               viewer form and text load using its constructor.
+///               Moved the Edit button to the bottom of the UI and 
+///               added the "License" button to the lower part of the
+///               UI and added a click event handler to show the file
+///               viewer form as a modal dialog.
+///               - Resolves issue 3
 /// 
 /// Resolved:
 /// 1. Determine if a break during looping kills the whole
@@ -54,11 +63,11 @@ using System.Windows.Forms;
 ///    they should hit reset... on the other hand, if I quit
 ///    being lazy and add an event handler for all the 
 ///    changeable UI elements, I could handle this internally.
-///    
-/// ToDo:
 /// 3. Need to add the GNU license and a simple viewer so the
 ///    user can read it if they want (form with a read only
 ///    text box on it).
+///    
+/// ToDo/Issues:
 ///              
 /// </summary>
 namespace FractalFun
@@ -97,6 +106,7 @@ namespace FractalFun
         private bool looping_ = false;          // Doing multiple images if true
         private string BasePath = "";           // Location to save files
         private string PredefinesFile = "PredefinedAttractors.json";    // Name of the predefines file
+        private string ViewFilename_ = "gnu_gpl3.txt";                   // GNU3 license
         private bool BreakAll_ = false;         // If true, the break button stops all renders
 
         /// <summary>
@@ -133,6 +143,7 @@ namespace FractalFun
         public string BasePath1 { get => BasePath; set => BasePath = value; }
         public string PredefinesFile1 { get => PredefinesFile; set => PredefinesFile = value; }
         public bool BreakAll { get => BreakAll_; set => BreakAll_ = value; }
+        public string ViewFilename { get => ViewFilename_; set => ViewFilename_ = value; }
 
         public List<Attractor> Attractors;
 
@@ -288,10 +299,21 @@ namespace FractalFun
         }
 
         /// <summary>
-        /// 
+        /// Load the file viewer
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
+        /// <param name="sender">License button</param>
+        /// <param name="e">Event args</param>
+        private void BtnLicense_Click(object sender, EventArgs e)
+        {
+            FileViewer ViewForm = new FileViewer(ViewFilename);
+            ViewForm.ShowDialog();
+        }
+
+        /// <summary>
+        /// Handle the break mode checkbox
+        /// </summary>
+        /// <param name="sender">Break mode checkbox</param>
+        /// <param name="e">Event args</param>
         private void CBXBreakMode_CheckedChanged(object sender, EventArgs e)
         {
             if (CBXBreakMode.Checked)
@@ -1086,6 +1108,7 @@ namespace FractalFun
         {
             DoReset();
         }
+
     }
 
     /// <summary>
