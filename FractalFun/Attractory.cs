@@ -9,9 +9,25 @@ using System.Windows.Forms;
 /// <summary>
 /// FractalFun.Attractory
 /// 
-/// Creates attractors based on the code described in the book 
+/// Creates Pickford attractors based on the code described in the book 
 /// "Chaos In Wonderland" by Clifford A. Pickover, 1994, pg 267 M.2,
 /// ISBN 0-312-10743-9 as well as adhoc or original predefined attractors
+/// 
+/// Fractal Fun (Attractor Exploder)
+/// Copyright(C) 2019 by Dan Rhea
+///
+/// This program is free software: you can redistribute it and/or modify
+/// it under the terms of the GNU General Public License as published by
+/// the Free Software Foundation, either version 3 of the License, or
+/// (at your option) any later version.
+///
+/// This program is distributed in the hope that it will be useful,
+/// but WITHOUT ANY WARRANTY; without even the implied warranty of
+/// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.See the
+/// GNU General Public License for more details.
+///
+/// You should have received a copy of the GNU General Public License
+/// along with this program. If not, see<https://www.gnu.org/licenses/>.
 /// 
 /// Changes:
 /// 
@@ -52,8 +68,41 @@ using System.Windows.Forms;
 ///               UI and added a click event handler to show the file
 ///               viewer form as a modal dialog.
 ///               - Resolves issue 3
+/// 4/30/2019 DWR After I did some research I discovered that the 
+/// 1.1.22.0      attractors this visualizer creates are all Pickford
+///               attractors so I'm changing "strange attractor" 
+///               references to "Pickford attractors". Credit where
+///               credit is due! "Pickford! I read your book!" :)
+///               - I darkened the settings panel and I'm working on a
+///               dark mode that will draw the attractors on a black
+///               background with dark gray through white pixels.
+///               - Dark mode is now implemented, just like light mode,
+///               only darker
+///               - I'm also doing some experimentation with converting
+///               our ARGB colors to HSV and looping through the hues
+///               rather than the current gray scale each time I hit a
+///               lit pixel. Eventually I will expand out to more 
+///               visualizers for other attractors and introduce a few
+///               - alternate Pickford attractor variants added with a 
+///               drop dow list to select them
+///               
+///                 xnew=cos(y*b)+c*sin(x*b)
+///                 ynew=cos(x*a)+d*sin(y*a)
 /// 
-/// Resolved:
+///               - Also working on adding automated unit tests to the
+///               project... not that a small project like this really
+///               needs this level of testing, but I need to master this
+///               for my real job (#DevOps)
+///
+/// ToDo:
+///               - I'm also doing some experimentation with converting
+///               our ARGB colors to HSV and looping through the hues
+///               rather than the current gray scale each time I hit a
+///               lit pixel. Eventually I will expand out to more 
+///               visualizers for other attractors and introduce a few
+/// 
+/// Open issues:
+/// Resolved issues:
 /// 1. Determine if a break during looping kills the whole
 ///    series or just the current render. Currently it just
 ///    affects the current render. Maybe a checkbox to set
@@ -105,9 +154,12 @@ namespace FractalFun
         private bool HitTheBrakes_ = false;     // Stop render if true
         private bool looping_ = false;          // Doing multiple images if true
         private string BasePath = "";           // Location to save files
+        private bool BreakAll_ = false;         // If true, the break button stops all renders
+        private bool DarkMode_ = false;         // If true, plot white pixels on black
+        private int Mode_ = 0;                  // Attractor mode
+
         private string PredefinesFile = "PredefinedAttractors.json";    // Name of the predefines file
         private string ViewFilename_ = "gnu_gpl3.txt";                   // GNU3 license
-        private bool BreakAll_ = false;         // If true, the break button stops all renders
 
         /// <summary>
         /// Parameters (see above for the objects encapsulated below)
@@ -143,6 +195,8 @@ namespace FractalFun
         public string BasePath1 { get => BasePath; set => BasePath = value; }
         public string PredefinesFile1 { get => PredefinesFile; set => PredefinesFile = value; }
         public bool BreakAll { get => BreakAll_; set => BreakAll_ = value; }
+        public bool DarkMode { get => DarkMode_; set => DarkMode_ = value; }
+        public int Mode { get => Mode_; set => Mode_ = value; }
         public string ViewFilename { get => ViewFilename_; set => ViewFilename_ = value; }
 
         public List<Attractor> Attractors;
@@ -186,6 +240,19 @@ namespace FractalFun
             CBXBreakMode.Checked = BreakAll;    // Defaults to off
 
             LoadPredefines();
+
+            // Load attractor type drop down
+            DroopMode.Items.Insert(0, "Pickford attractor");
+            DroopMode.Items.Insert(1, "Pickford attractor (sin,cos)");
+            DroopMode.Items.Insert(2, "Pickford attractor (cos)");
+            DroopMode.SelectedItem = 0;
+            Mode = 0;
+
+            // GPL stuff
+            TxtLog.AppendText("Fractal Fun (Attractor Exploder)" + Environment.NewLine);
+            TxtLog.AppendText("Copyright 2019 Dan Rhea" + Environment.NewLine);
+            TxtLog.AppendText("This program comes with ABSOLUTELY NO WARRANTY"+Environment.NewLine);
+            TxtLog.AppendText("This is free software, and you are welcome to redistribute it.");
 
             // Trigger the UI init
             timer1.Enabled = true;
@@ -286,6 +353,14 @@ namespace FractalFun
             Application.DoEvents();
         }
 
+        private void DroopMode_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            Mode = DroopMode.SelectedIndex;
+            // Allow the UI to update
+            DoReset();
+            Application.DoEvents();
+        }
+
         /// <summary>
         /// Load the predefines editor
         /// </summary>
@@ -324,6 +399,19 @@ namespace FractalFun
             {
                 BreakAll = false;
             }
+        }
+
+        private void CBXDarkMode_CheckedChanged(object sender, EventArgs e)
+        {
+            if (CBXDarkMode .Checked)
+            {
+                DarkMode = true;
+            }
+            else
+            {
+                DarkMode = true;
+            }
+
         }
 
         /// <summary>
@@ -740,12 +828,19 @@ namespace FractalFun
                 // Create a 32 bit ARGB bitmap to draw on
                 Bitmap Paper = MakePaper();
 
-                // paint it white...
+                // Set up the paper...
                 for (int ix = 0; ix < (int)W1; ix++)
                 {
                     for (int iy = 0; iy < (int)H1; iy++)
                     {
-                        Paper.SetPixel(ix, iy, Color.White);
+                        if (DarkMode)
+                        {
+                            Paper.SetPixel(ix, iy, Color.Black);
+                        }
+                        else
+                        {
+                            Paper.SetPixel(ix, iy, Color.White);
+                        }
                     }
                 }
 
@@ -771,9 +866,25 @@ namespace FractalFun
                     // images from the calculation below appear to be 
                     // rotated 90 degrees and mirrored when compared to the
                     // images in Pickover's "Chaos In Wonderland" book)
-                    xn = Math.Sin(y * B) + C * Math.Sin(x * B);
-                    yn = Math.Sin(x * A) + D * Math.Sin(y * A);
-
+                    switch (Mode)
+                    {
+                        case 0:
+                            xn = Math.Sin(y * B) + C * Math.Sin(x * B);
+                            yn = Math.Sin(x * A) + D * Math.Sin(y * A);
+                            break;
+                        case 1:
+                            xn = Math.Sin(y * B) + C * Math.Cos(x * B);
+                            yn = Math.Cos(x * A) + D * Math.Sin(y * A);
+                            break;
+                        case 2:
+                            xn = Math.Cos(y * B) + C * Math.Cos(x * B);
+                            yn = Math.Cos(x * A) + D * Math.Cos(y * A);
+                            break;
+                        default:
+                            xn = Math.Sin(y * B) + C * Math.Sin(x * B);
+                            yn = Math.Sin(x * A) + D * Math.Sin(y * A);
+                            break;
+                    }
                     // Update the coordinates
                     x = xn;
                     y = yn;
@@ -848,6 +959,10 @@ namespace FractalFun
         /// <summary>
         /// Set first time pixels to light gray and then darken them each
         /// time they are revisited until they are black
+        /// Or... if DarkMode is true
+        /// Set first time pixels to dark gray and then lighten them each
+        /// time they are revisited until they are white
+        /// 
         /// </summary>
         /// <param name="x">X coordinate</param>
         /// <param name="y">Y coordinate</param>
@@ -858,6 +973,8 @@ namespace FractalFun
             // Set high and low range for a pixel
             Color Lo = Color.Black;
             Color Hi = Color.FromArgb(255, (int)0xE8, (int)0xE8, (int)0xE8); // Lighter gray
+            Color Dg = Color.FromArgb(255, (int)0x1F, (int)0x1F, (int)0x1F); // Very dark gray
+            Color Wh = Color.White;
 
             // Grab the color of the current pixel
             Color got = image.GetPixel((int)x, (int)y);
@@ -868,20 +985,40 @@ namespace FractalFun
             byte b = got.B; // Green
             byte a = got.A; // Alpha channel
 
-            // If we are brighter than black, darken
-            if (r > Lo.R) { r--; }
-            if (g > Lo.G) { g--; }
-            if (b > Lo.B) { b--; }
+            if (DarkMode)
+            {
+                // If we are darker than white, lighten
+                if (r < Wh.R) { r++; }
+                if (g < Wh.G) { g++; }
+                if (b < Wh.B) { b++; }
 
-            // If we are brighter than lighter gray (0xFFE8E8E8), bump to lighter gray
-            if (r > Hi.R) { r = Hi.R; }
-            if (g > Hi.G) { g = Hi.G; }
-            if (b > Hi.B) { b = Hi.B; }
+                // If we are darker than really dark gray, bump to really dark gray
+                if (r < Dg.R) { r = Dg.R; }
+                if (g < Dg.G) { g = Dg.G; }
+                if (b < Dg.B) { b = Dg.B; }
 
-            // Clamp at black
-            if (r <= Lo.R) { r = Lo.R; }
-            if (g <= Lo.G) { g = Lo.G; }
-            if (b <= Lo.B) { b = Lo.B; }
+                // Clamp at White
+                if (r >= Wh.R) { r = Wh.R; }
+                if (g >= Wh.G) { g = Wh.G; }
+                if (b >= Wh.B) { b = Wh.B; }
+            }
+            else
+            {
+                // If we are brighter than black, darken
+                if (r > Lo.R) { r--; }
+                if (g > Lo.G) { g--; }
+                if (b > Lo.B) { b--; }
+
+                // If we are brighter than lighter gray (0xFFE8E8E8), bump to lighter gray
+                if (r > Hi.R) { r = Hi.R; }
+                if (g > Hi.G) { g = Hi.G; }
+                if (b > Hi.B) { b = Hi.B; }
+
+                // Clamp at black
+                if (r <= Lo.R) { r = Lo.R; }
+                if (g <= Lo.G) { g = Lo.G; }
+                if (b <= Lo.B) { b = Lo.B; }
+            }
 
             // Reassemble the RGB and return the new color
             return Color.FromArgb((int)a, (int)r, (int)g, (int)b);
@@ -1108,7 +1245,6 @@ namespace FractalFun
         {
             DoReset();
         }
-
     }
 
     /// <summary>
