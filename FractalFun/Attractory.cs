@@ -68,7 +68,7 @@ using System.Windows.Forms;
 ///               UI and added a click event handler to show the file
 ///               viewer form as a modal dialog.
 ///               - Resolves issue 3
-/// 4/30/2019 DWR After I did some research I discovered that the 
+/// 4/30/2019 DWR - After I did some research I discovered that the 
 /// 1.1.22.0      attractors this visualizer creates are all Pickford
 ///               attractors so I'm changing "strange attractor" 
 ///               references to "Pickford attractors". Credit where
@@ -93,6 +93,8 @@ using System.Windows.Forms;
 ///               project... not that a small project like this really
 ///               needs this level of testing, but I need to master this
 ///               for my real job (#DevOps)
+/// 5/09/2019 DWR - Fixed a bug that left us in dark mode no matter what
+/// 1.1.23.0      the checkbox was set to.
 ///
 /// ToDo:
 ///               - I'm also doing some experimentation with converting
@@ -409,7 +411,7 @@ namespace FractalFun
             }
             else
             {
-                DarkMode = true;
+                DarkMode = false;
             }
 
         }
