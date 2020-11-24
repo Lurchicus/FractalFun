@@ -33,10 +33,10 @@
             // 
             // TxtView
             // 
-            this.TxtView.BackColor = System.Drawing.SystemColors.WindowFrame;
+            this.TxtView.BackColor = System.Drawing.Color.DarkBlue;
             this.TxtView.Dock = System.Windows.Forms.DockStyle.Fill;
             this.TxtView.Font = new System.Drawing.Font("Lucida Console", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TxtView.ForeColor = System.Drawing.SystemColors.Info;
+            this.TxtView.ForeColor = System.Drawing.Color.White;
             this.TxtView.Location = new System.Drawing.Point(0, 0);
             this.TxtView.Multiline = true;
             this.TxtView.Name = "TxtView";
@@ -51,6 +51,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(662, 450);
             this.Controls.Add(this.TxtView);
+            this.ForeColor = System.Drawing.Color.White;
             this.Name = "FileViewer";
             this.Text = "FileViewer";
             this.Load += new System.EventHandler(this.FileViewer_Load);

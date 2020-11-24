@@ -177,6 +177,7 @@
             // 
             // DroopMode
             // 
+            this.DroopMode.BackColor = System.Drawing.Color.DeepSkyBlue;
             this.DroopMode.FormattingEnabled = true;
             this.DroopMode.Location = new System.Drawing.Point(63, 38);
             this.DroopMode.Name = "DroopMode";
@@ -211,6 +212,7 @@
             this.TxtLog.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.TxtLog.BackColor = System.Drawing.Color.PaleGoldenrod;
             this.TxtLog.Location = new System.Drawing.Point(14, 332);
             this.TxtLog.Multiline = true;
             this.TxtLog.Name = "TxtLog";
@@ -222,23 +224,25 @@
             // BtnLicense
             // 
             this.BtnLicense.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.BtnLicense.BackColor = System.Drawing.Color.DeepSkyBlue;
             this.BtnLicense.Location = new System.Drawing.Point(254, 410);
             this.BtnLicense.Name = "BtnLicense";
             this.BtnLicense.Size = new System.Drawing.Size(75, 23);
             this.BtnLicense.TabIndex = 105;
             this.BtnLicense.Text = "License";
-            this.BtnLicense.UseVisualStyleBackColor = true;
+            this.BtnLicense.UseVisualStyleBackColor = false;
             this.BtnLicense.Click += new System.EventHandler(this.BtnLicense_Click);
             // 
             // BtnEdit
             // 
             this.BtnEdit.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.BtnEdit.BackColor = System.Drawing.Color.DeepSkyBlue;
             this.BtnEdit.Location = new System.Drawing.Point(11, 410);
             this.BtnEdit.Name = "BtnEdit";
             this.BtnEdit.Size = new System.Drawing.Size(75, 23);
             this.BtnEdit.TabIndex = 103;
             this.BtnEdit.Text = "Edit";
-            this.BtnEdit.UseVisualStyleBackColor = true;
+            this.BtnEdit.UseVisualStyleBackColor = false;
             this.BtnEdit.Click += new System.EventHandler(this.BtnEdit_Click);
             // 
             // label18
@@ -252,6 +256,7 @@
             // 
             // TxtFrame
             // 
+            this.TxtFrame.BackColor = System.Drawing.Color.DeepSkyBlue;
             this.TxtFrame.Location = new System.Drawing.Point(225, 182);
             this.TxtFrame.Name = "TxtFrame";
             this.TxtFrame.ReadOnly = true;
@@ -270,6 +275,7 @@
             // 
             // TxtDStep
             // 
+            this.TxtDStep.BackColor = System.Drawing.Color.Yellow;
             this.TxtDStep.Location = new System.Drawing.Point(274, 156);
             this.TxtDStep.Name = "TxtDStep";
             this.TxtDStep.Size = new System.Drawing.Size(50, 20);
@@ -279,6 +285,7 @@
             // 
             // TxtCStep
             // 
+            this.TxtCStep.BackColor = System.Drawing.Color.Yellow;
             this.TxtCStep.Location = new System.Drawing.Point(274, 130);
             this.TxtCStep.Name = "TxtCStep";
             this.TxtCStep.Size = new System.Drawing.Size(50, 20);
@@ -288,6 +295,7 @@
             // 
             // TxtDEnd
             // 
+            this.TxtDEnd.BackColor = System.Drawing.Color.Pink;
             this.TxtDEnd.Location = new System.Drawing.Point(168, 156);
             this.TxtDEnd.Name = "TxtDEnd";
             this.TxtDEnd.Size = new System.Drawing.Size(100, 20);
@@ -297,6 +305,7 @@
             // 
             // TxtCEnd
             // 
+            this.TxtCEnd.BackColor = System.Drawing.Color.Pink;
             this.TxtCEnd.Location = new System.Drawing.Point(168, 130);
             this.TxtCEnd.Name = "TxtCEnd";
             this.TxtCEnd.Size = new System.Drawing.Size(100, 20);
@@ -306,6 +315,7 @@
             // 
             // TxtBStep
             // 
+            this.TxtBStep.BackColor = System.Drawing.Color.Yellow;
             this.TxtBStep.Location = new System.Drawing.Point(274, 104);
             this.TxtBStep.Name = "TxtBStep";
             this.TxtBStep.Size = new System.Drawing.Size(50, 20);
@@ -315,6 +325,7 @@
             // 
             // TxtBEnd
             // 
+            this.TxtBEnd.BackColor = System.Drawing.Color.Pink;
             this.TxtBEnd.Location = new System.Drawing.Point(168, 104);
             this.TxtBEnd.Name = "TxtBEnd";
             this.TxtBEnd.Size = new System.Drawing.Size(100, 20);
@@ -333,6 +344,7 @@
             // 
             // TxtAStep
             // 
+            this.TxtAStep.BackColor = System.Drawing.Color.Yellow;
             this.TxtAStep.Location = new System.Drawing.Point(274, 78);
             this.TxtAStep.Name = "TxtAStep";
             this.TxtAStep.Size = new System.Drawing.Size(50, 20);
@@ -351,6 +363,7 @@
             // 
             // TxtAEnd
             // 
+            this.TxtAEnd.BackColor = System.Drawing.Color.Pink;
             this.TxtAEnd.Location = new System.Drawing.Point(168, 78);
             this.TxtAEnd.Name = "TxtAEnd";
             this.TxtAEnd.Size = new System.Drawing.Size(100, 20);
@@ -369,6 +382,7 @@
             // 
             // DroopDown
             // 
+            this.DroopDown.BackColor = System.Drawing.Color.DeepSkyBlue;
             this.DroopDown.FormattingEnabled = true;
             this.DroopDown.Location = new System.Drawing.Point(64, 11);
             this.DroopDown.MaxDropDownItems = 12;
@@ -388,6 +402,7 @@
             // 
             // TxtName
             // 
+            this.TxtName.BackColor = System.Drawing.Color.DeepSkyBlue;
             this.TxtName.Location = new System.Drawing.Point(62, 208);
             this.TxtName.Name = "TxtName";
             this.TxtName.Size = new System.Drawing.Size(100, 20);
@@ -405,6 +420,7 @@
             // 
             // TxtScale
             // 
+            this.TxtScale.BackColor = System.Drawing.Color.DeepSkyBlue;
             this.TxtScale.Location = new System.Drawing.Point(62, 182);
             this.TxtScale.Name = "TxtScale";
             this.TxtScale.Size = new System.Drawing.Size(100, 20);
@@ -433,36 +449,39 @@
             // btnSave
             // 
             this.btnSave.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.btnSave.BackColor = System.Drawing.Color.DeepSkyBlue;
             this.btnSave.Enabled = false;
             this.btnSave.Location = new System.Drawing.Point(254, 439);
             this.btnSave.Name = "btnSave";
             this.btnSave.Size = new System.Drawing.Size(75, 23);
             this.btnSave.TabIndex = 10;
             this.btnSave.Text = "Save";
-            this.btnSave.UseVisualStyleBackColor = true;
-            this.btnSave.Click += new System.EventHandler(this.btnSave_Click);
+            this.btnSave.UseVisualStyleBackColor = false;
+            this.btnSave.Click += new System.EventHandler(this.BtnSave_Click);
             // 
             // BtnBreak
             // 
             this.BtnBreak.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.BtnBreak.BackColor = System.Drawing.Color.Pink;
             this.BtnBreak.Location = new System.Drawing.Point(92, 439);
             this.BtnBreak.Name = "BtnBreak";
             this.BtnBreak.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
             this.BtnBreak.Size = new System.Drawing.Size(75, 23);
             this.BtnBreak.TabIndex = 8;
             this.BtnBreak.Text = "Break";
-            this.BtnBreak.UseVisualStyleBackColor = true;
+            this.BtnBreak.UseVisualStyleBackColor = false;
             this.BtnBreak.Click += new System.EventHandler(this.BtnBreak_Click);
             // 
             // BtnReset
             // 
             this.BtnReset.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.BtnReset.BackColor = System.Drawing.Color.Yellow;
             this.BtnReset.Location = new System.Drawing.Point(173, 439);
             this.BtnReset.Name = "BtnReset";
             this.BtnReset.Size = new System.Drawing.Size(75, 23);
             this.BtnReset.TabIndex = 9;
             this.BtnReset.Text = "Reset";
-            this.BtnReset.UseVisualStyleBackColor = true;
+            this.BtnReset.UseVisualStyleBackColor = false;
             this.BtnReset.Click += new System.EventHandler(this.BtnReset_Click);
             // 
             // label9
@@ -485,6 +504,7 @@
             // 
             // TxtMinY
             // 
+            this.TxtMinY.BackColor = System.Drawing.Color.Lime;
             this.TxtMinY.Location = new System.Drawing.Point(225, 260);
             this.TxtMinY.Name = "TxtMinY";
             this.TxtMinY.ReadOnly = true;
@@ -494,6 +514,7 @@
             // 
             // TxtMaxY
             // 
+            this.TxtMaxY.BackColor = System.Drawing.Color.Pink;
             this.TxtMaxY.Location = new System.Drawing.Point(225, 286);
             this.TxtMaxY.Name = "TxtMaxY";
             this.TxtMaxY.ReadOnly = true;
@@ -503,6 +524,7 @@
             // 
             // TxtMinX
             // 
+            this.TxtMinX.BackColor = System.Drawing.Color.Lime;
             this.TxtMinX.Location = new System.Drawing.Point(225, 208);
             this.TxtMinX.Name = "TxtMinX";
             this.TxtMinX.ReadOnly = true;
@@ -512,6 +534,7 @@
             // 
             // TxtMaxX
             // 
+            this.TxtMaxX.BackColor = System.Drawing.Color.Pink;
             this.TxtMaxX.Location = new System.Drawing.Point(225, 234);
             this.TxtMaxX.Name = "TxtMaxX";
             this.TxtMaxX.ReadOnly = true;
@@ -530,6 +553,7 @@
             // 
             // TxtIteration
             // 
+            this.TxtIteration.BackColor = System.Drawing.Color.Yellow;
             this.TxtIteration.Location = new System.Drawing.Point(63, 286);
             this.TxtIteration.Name = "TxtIteration";
             this.TxtIteration.ReadOnly = true;
@@ -557,6 +581,7 @@
             // 
             // TxtWidth
             // 
+            this.TxtWidth.BackColor = System.Drawing.Color.Yellow;
             this.TxtWidth.Location = new System.Drawing.Point(62, 260);
             this.TxtWidth.Name = "TxtWidth";
             this.TxtWidth.ReadOnly = true;
@@ -566,6 +591,7 @@
             // 
             // TxtHeight
             // 
+            this.TxtHeight.BackColor = System.Drawing.Color.Yellow;
             this.TxtHeight.Location = new System.Drawing.Point(62, 234);
             this.TxtHeight.Name = "TxtHeight";
             this.TxtHeight.ReadOnly = true;
@@ -576,13 +602,14 @@
             // BtnRender
             // 
             this.BtnRender.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.BtnRender.BackColor = System.Drawing.Color.Lime;
             this.BtnRender.Enabled = false;
             this.BtnRender.Location = new System.Drawing.Point(11, 439);
             this.BtnRender.Name = "BtnRender";
             this.BtnRender.Size = new System.Drawing.Size(75, 23);
             this.BtnRender.TabIndex = 7;
             this.BtnRender.Text = "Render";
-            this.BtnRender.UseVisualStyleBackColor = true;
+            this.BtnRender.UseVisualStyleBackColor = false;
             this.BtnRender.Click += new System.EventHandler(this.BtnRender_Click);
             // 
             // label4
@@ -627,6 +654,7 @@
             // 
             // TxtD
             // 
+            this.TxtD.BackColor = System.Drawing.Color.Lime;
             this.TxtD.Location = new System.Drawing.Point(62, 156);
             this.TxtD.Name = "TxtD";
             this.TxtD.Size = new System.Drawing.Size(100, 20);
@@ -636,6 +664,7 @@
             // 
             // TxtC
             // 
+            this.TxtC.BackColor = System.Drawing.Color.Lime;
             this.TxtC.Location = new System.Drawing.Point(62, 130);
             this.TxtC.Name = "TxtC";
             this.TxtC.Size = new System.Drawing.Size(100, 20);
@@ -645,6 +674,7 @@
             // 
             // TxtB
             // 
+            this.TxtB.BackColor = System.Drawing.Color.Lime;
             this.TxtB.Location = new System.Drawing.Point(62, 104);
             this.TxtB.Name = "TxtB";
             this.TxtB.Size = new System.Drawing.Size(100, 20);
@@ -654,6 +684,7 @@
             // 
             // TxtA
             // 
+            this.TxtA.BackColor = System.Drawing.Color.Lime;
             this.TxtA.Location = new System.Drawing.Point(62, 78);
             this.TxtA.Name = "TxtA";
             this.TxtA.Size = new System.Drawing.Size(100, 20);

@@ -30,9 +30,9 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(EditPredef));
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
+            this.toolStripButton1 = new System.Windows.Forms.ToolStripButton();
             this.panel1 = new System.Windows.Forms.Panel();
             this.TxtEdit = new System.Windows.Forms.TextBox();
-            this.toolStripButton1 = new System.Windows.Forms.ToolStripButton();
             this.toolStrip1.SuspendLayout();
             this.panel1.SuspendLayout();
             this.SuspendLayout();
@@ -48,6 +48,17 @@
             this.toolStrip1.TabIndex = 0;
             this.toolStrip1.Text = "toolStrip1";
             // 
+            // toolStripButton1
+            // 
+            this.toolStripButton1.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButton1.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButton1.Image")));
+            this.toolStripButton1.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButton1.Name = "toolStripButton1";
+            this.toolStripButton1.Size = new System.Drawing.Size(23, 22);
+            this.toolStripButton1.Text = "Save predefs";
+            this.toolStripButton1.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
+            this.toolStripButton1.Click += new System.EventHandler(this.ToolStripButton1_Click);
+            // 
             // panel1
             // 
             this.panel1.Controls.Add(this.TxtEdit);
@@ -59,26 +70,16 @@
             // 
             // TxtEdit
             // 
-            this.TxtEdit.BackColor = System.Drawing.SystemColors.WindowFrame;
+            this.TxtEdit.BackColor = System.Drawing.Color.DarkBlue;
             this.TxtEdit.Dock = System.Windows.Forms.DockStyle.Fill;
             this.TxtEdit.Font = new System.Drawing.Font("Lucida Console", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TxtEdit.ForeColor = System.Drawing.SystemColors.Info;
+            this.TxtEdit.ForeColor = System.Drawing.Color.Yellow;
             this.TxtEdit.Location = new System.Drawing.Point(0, 0);
             this.TxtEdit.Multiline = true;
             this.TxtEdit.Name = "TxtEdit";
             this.TxtEdit.ScrollBars = System.Windows.Forms.ScrollBars.Both;
             this.TxtEdit.Size = new System.Drawing.Size(662, 425);
             this.TxtEdit.TabIndex = 0;
-            // 
-            // toolStripButton1
-            // 
-            this.toolStripButton1.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStripButton1.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButton1.Image")));
-            this.toolStripButton1.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripButton1.Name = "toolStripButton1";
-            this.toolStripButton1.Size = new System.Drawing.Size(23, 22);
-            this.toolStripButton1.Text = "toolStripButton1";
-            this.toolStripButton1.Click += new System.EventHandler(this.ToolStripButton1_Click);
             // 
             // EditPredef
             // 

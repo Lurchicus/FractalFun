@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System;
 using System.Media;
+using System.Reflection;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
@@ -84,7 +85,7 @@ using System.Windows.Forms;
 ///               lit pixel. Eventually I will expand out to more 
 ///               visualizers for other attractors and introduce a few
 ///               - alternate Pickford attractor variants added with a 
-///               drop dow list to select them
+///               drop down list to select them
 ///               
 ///                 xnew=cos(y*b)+c*sin(x*b)
 ///                 ynew=cos(x*a)+d*sin(y*a)
@@ -95,6 +96,11 @@ using System.Windows.Forms;
 ///               for my real job (#DevOps)
 /// 5/09/2019 DWR - Fixed a bug that left us in dark mode no matter what
 /// 1.1.23.0      the checkbox was set to.
+/// 11/24/2020 DWR - Brightened up the UI a bit
+///                - Did some clean-up and optimizations.
+///                - Set better colors for the editor and file viewer
+///                - Added version to text log
+///                - Got rid of minor "issue" warnings
 ///
 /// ToDo:
 ///               - I'm also doing some experimentation with converting
@@ -200,6 +206,7 @@ namespace FractalFun
         public bool DarkMode { get => DarkMode_; set => DarkMode_ = value; }
         public int Mode { get => Mode_; set => Mode_ = value; }
         public string ViewFilename { get => ViewFilename_; set => ViewFilename_ = value; }
+        public string Ver { get; set; }
 
         public List<Attractor> Attractors;
 
@@ -251,7 +258,8 @@ namespace FractalFun
             Mode = 0;
 
             // GPL stuff
-            TxtLog.AppendText("Fractal Fun (Attractor Exploder)" + Environment.NewLine);
+            Ver = Assembly.GetExecutingAssembly().GetName().Version.ToString();
+            TxtLog.AppendText("Fractal Fun (Attractor Exploder) v" + Ver + Environment.NewLine);
             TxtLog.AppendText("Copyright 2019 Dan Rhea" + Environment.NewLine);
             TxtLog.AppendText("This program comes with ABSOLUTELY NO WARRANTY"+Environment.NewLine);
             TxtLog.AppendText("This is free software, and you are welcome to redistribute it.");
@@ -320,7 +328,7 @@ namespace FractalFun
         /// </summary>
         /// <param name="sender">Save button</param>
         /// <param name="e">Event args</param>
-        private void btnSave_Click(object sender, EventArgs e)
+        private void BtnSave_Click(object sender, EventArgs e)
         {
             btnSave.Enabled = false;
             DoSaveFile(0, A1, B1, C1, D1);
@@ -333,7 +341,7 @@ namespace FractalFun
         /// <param name="e">Event args</param>
         private void DroopDown_SelectedIndexChanged(object sender, EventArgs e)
         {
-            int NewID = 0;
+            int NewID;
             NewID = DroopDown.SelectedIndex;
             TxtName.Text = Attractors[NewID].name;
             TxtScale.Text = Attractors[NewID].scale.ToString();
@@ -434,7 +442,7 @@ namespace FractalFun
             DroopDown.Items.Clear();
             foreach (var item in Attractors)
             {
-                DroopDown.Items.Add(new { name = item.name, value = Convert.ToString(item.id) });
+                DroopDown.Items.Add(item: new { item.name, value = Convert.ToString(item.id) });
             }
             DroopDown.DisplayMember = "name";
             DroopDown.ValueMember = "value";
@@ -1036,7 +1044,7 @@ namespace FractalFun
         /// <param name="D">D1</param>
         public void DoSaveFile(int Frame, double A, double B, double C, double D)
         {
-            string SaveFile = "";
+            string SaveFile;
 
             // Get the current date and time and format so we can use it in a 
             // filename
