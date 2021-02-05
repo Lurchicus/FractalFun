@@ -580,7 +580,7 @@
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(10, 263);
+            this.label6.Location = new System.Drawing.Point(11, 237);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(35, 13);
             this.label6.TabIndex = 13;
@@ -589,7 +589,7 @@
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(10, 237);
+            this.label5.Location = new System.Drawing.Point(11, 263);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(38, 13);
             this.label5.TabIndex = 12;
@@ -598,7 +598,7 @@
             // TxtWidth
             // 
             this.TxtWidth.BackColor = System.Drawing.Color.Yellow;
-            this.TxtWidth.Location = new System.Drawing.Point(62, 260);
+            this.TxtWidth.Location = new System.Drawing.Point(62, 234);
             this.TxtWidth.Name = "TxtWidth";
             this.TxtWidth.ReadOnly = true;
             this.TxtWidth.Size = new System.Drawing.Size(100, 20);
@@ -608,7 +608,7 @@
             // TxtHeight
             // 
             this.TxtHeight.BackColor = System.Drawing.Color.Yellow;
-            this.TxtHeight.Location = new System.Drawing.Point(62, 234);
+            this.TxtHeight.Location = new System.Drawing.Point(62, 260);
             this.TxtHeight.Name = "TxtHeight";
             this.TxtHeight.ReadOnly = true;
             this.TxtHeight.Size = new System.Drawing.Size(100, 20);
@@ -633,9 +633,9 @@
             this.label4.AutoSize = true;
             this.label4.Location = new System.Drawing.Point(10, 159);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(54, 13);
+            this.label4.Size = new System.Drawing.Size(51, 13);
             this.label4.TabIndex = 7;
-            this.label4.Text = "D (-.5:1.5)";
+            this.label4.Text = "D: -.5:1.5";
             this.label4.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // label3
@@ -643,9 +643,9 @@
             this.label3.AutoSize = true;
             this.label3.Location = new System.Drawing.Point(10, 133);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(53, 13);
+            this.label3.Size = new System.Drawing.Size(50, 13);
             this.label3.TabIndex = 6;
-            this.label3.Text = "C (-.5:1.5)";
+            this.label3.Text = "C: -.5:1.5";
             this.label3.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // label2
@@ -653,9 +653,9 @@
             this.label2.AutoSize = true;
             this.label2.Location = new System.Drawing.Point(10, 107);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(41, 13);
+            this.label2.Size = new System.Drawing.Size(38, 13);
             this.label2.TabIndex = 5;
-            this.label2.Text = "B (-3:3)";
+            this.label2.Text = "B: -3:3";
             this.label2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // label1
@@ -663,9 +663,9 @@
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(10, 81);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(41, 13);
+            this.label1.Size = new System.Drawing.Size(38, 13);
             this.label1.TabIndex = 99;
-            this.label1.Text = "A (-3:3)";
+            this.label1.Text = "A: -3:3";
             this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // TxtD

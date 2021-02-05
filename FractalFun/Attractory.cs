@@ -113,18 +113,27 @@ using System.Windows.Forms;
 ///                it larger than the panel it's housed in. I will add a
 ///                JSON file with various resolutions that can be picked
 ///                from a drop-down (not done yet).
-///                - Added "StampMode" thst when true lets me put some of
+///                - Added "StampMode" that when true lets me put some of
 ///                the information about the attractor in the upper left
-///                of the image. Added a checkbox to control the mode.
+///                corner of the image. Added a checkbox to control the mode.
 ///                - Changed the renderer to update the screen from every
 ///                1000 iterations to every 10,000. The display is a tiny
-///                bit choppier, but way faster.
+///                bit choppier, but way faster. I tried 100,000 but it
+///                didn't speed up much and made the image look like a
+///                slideshow.
 ///                - Redid the "splash" text displayed in the log text 
 ///                box to include official license wording (Gnu GPL3).
 ///                - For the log text box added batch render start and
 ///                stop times as well as the parameters for each render.
 ///                - Added file information to thelog text box. It's not
-///                pretty, but useful enough to include anyway.
+///                pretty, but it's useful enough to include anyway.
+/// 02/05/2020 DWR - The almost required even release number to go fix
+/// 1.1.26.0       comments, formatting and other "papercut" type items
+///                introduced in the previous release.
+///                - Flipped Height and Width UI elements so they match 
+///                the order of MinX, MaxX, MinY and MaxY (much less
+///                confusing this way).
+///               - Defaulted "Break stops all renders" to true. 
 ///
 /// Open/ToDo issues:
 ///               - I'm also doing some experimentation with converting
@@ -133,6 +142,9 @@ using System.Windows.Forms;
 ///               lit pixel. Eventually I will expand out to more 
 ///               visualizers for other attractors and introduce a few
 ///               predefined gradients. Hacking away at this.
+///               - Thinking about adding a checkbox to hide (minimize)
+///               the left panel during render to maximize the visible
+///               area for the image panel, 
 /// 
 /// Resolved issues:
 /// 1. Determine if a break during looping kills the whole
@@ -184,7 +196,7 @@ namespace FractalFun
         private bool HitTheBrakes_ = false;     // Stop render if true
         private bool looping_ = false;          // Doing multiple images if true
         private string BasePath = "";           // Location to save files
-        private bool BreakAll_ = false;         // If true, the break button stops all renders
+        private bool BreakAll_ = true;          // If true, the break button stops all renders
         private bool DarkMode_ = false;         // If true, plot white pixels on black
         private bool StampMode_ = false;        // If true, stamp rendered image with attractor info
         private int Mode_ = 0;                  // Attractor mode
@@ -297,12 +309,12 @@ namespace FractalFun
                 "modify it under the terms of the GNU General Public License " + 
                 "as published by the Free Software Foundation, either version " + 
                 "3 of the License, or (at your option) any later version." + nl + nl);
-            TxtLog.AppendText("This program is distributed in the hope that it will be" + 
-                "useful, but WITHOUT ANY WARRANTY; without even the" + 
-                "implied warranty of MERCHANTABILITY or FITNESS FOR" + 
+            TxtLog.AppendText("This program is distributed in the hope that it will be " + 
+                "useful, but WITHOUT ANY WARRANTY; without even the " + 
+                "implied warranty of MERCHANTABILITY or FITNESS FOR " + 
                 "A PARTICULAR PURPOSE. See the GNU General Public License for more details." + nl + nl);
-            TxtLog.AppendText("You should have received a copy of the GNU General Public" + 
-                "License along with this program. Click the license button" + 
+            TxtLog.AppendText("You should have received a copy of the GNU General Public " + 
+                "License along with this program. Click the license button " + 
                 "for the license." + nl + nl);
 
             // Trigger the UI init
