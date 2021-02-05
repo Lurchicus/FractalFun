@@ -4,6 +4,8 @@ using System.Media;
 using System.Reflection;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Drawing.Drawing2D;
+using System.Drawing.Text;
 using System.IO;
 using System.Windows.Forms;
 
@@ -97,19 +99,41 @@ using System.Windows.Forms;
 /// 5/09/2019 DWR - Fixed a bug that left us in dark mode no matter what
 /// 1.1.23.0      the checkbox was set to.
 /// 11/24/2020 DWR - Brightened up the UI a bit
-///                - Did some clean-up and optimizations.
+/// 1.1.24.0       - Did some clean-up and optimizations.
 ///                - Set better colors for the editor and file viewer
 ///                - Added version to text log
 ///                - Got rid of minor "issue" warnings
+/// 02/04/2021 DWR - Added code that lets me pan the image some. This 
+/// 1.1.25.0       needs a lot more work since viewporting does not seem
+///                to be a thing for standard .NET WinForms. Looking for
+///                an open source graphics package that supports it. I 
+///                know Leadtools can do this sort of thing but I'm 
+///                looking for an open source solution.
+///                - For now fixed the image size to 1050x1680. This makes
+///                it larger than the panel it's housed in. I will add a
+///                JSON file with various resolutions that can be picked
+///                from a drop-down (not done yet).
+///                - Added "StampMode" thst when true lets me put some of
+///                the information about the attractor in the upper left
+///                of the image. Added a checkbox to control the mode.
+///                - Changed the renderer to update the screen from every
+///                1000 iterations to every 10,000. The display is a tiny
+///                bit choppier, but way faster.
+///                - Redid the "splash" text displayed in the log text 
+///                box to include official license wording (Gnu GPL3).
+///                - For the log text box added batch render start and
+///                stop times as well as the parameters for each render.
+///                - Added file information to thelog text box. It's not
+///                pretty, but useful enough to include anyway.
 ///
-/// ToDo:
+/// Open/ToDo issues:
 ///               - I'm also doing some experimentation with converting
 ///               our ARGB colors to HSV and looping through the hues
 ///               rather than the current gray scale each time I hit a
 ///               lit pixel. Eventually I will expand out to more 
 ///               visualizers for other attractors and introduce a few
+///               predefined gradients. Hacking away at this.
 /// 
-/// Open issues:
 /// Resolved issues:
 /// 1. Determine if a break during looping kills the whole
 ///    series or just the current render. Currently it just
@@ -124,8 +148,6 @@ using System.Windows.Forms;
 ///    user can read it if they want (form with a read only
 ///    text box on it).
 ///    
-/// ToDo/Issues:
-///              
 /// </summary>
 namespace FractalFun
 {
@@ -164,10 +186,16 @@ namespace FractalFun
         private string BasePath = "";           // Location to save files
         private bool BreakAll_ = false;         // If true, the break button stops all renders
         private bool DarkMode_ = false;         // If true, plot white pixels on black
+        private bool StampMode_ = false;        // If true, stamp rendered image with attractor info
         private int Mode_ = 0;                  // Attractor mode
 
         private string PredefinesFile = "PredefinedAttractors.json";    // Name of the predefines file
         private string ViewFilename_ = "gnu_gpl3.txt";                   // GNU3 license
+
+        private Point MouseDownLocation;
+        private bool WhatADrag;
+        private Image SnapShot;
+        private Rectangle Frame;
 
         /// <summary>
         /// Parameters (see above for the objects encapsulated below)
@@ -204,6 +232,7 @@ namespace FractalFun
         public string PredefinesFile1 { get => PredefinesFile; set => PredefinesFile = value; }
         public bool BreakAll { get => BreakAll_; set => BreakAll_ = value; }
         public bool DarkMode { get => DarkMode_; set => DarkMode_ = value; }
+        public bool StampMode { get => StampMode_; set => StampMode_ = value; }
         public int Mode { get => Mode_; set => Mode_ = value; }
         public string ViewFilename { get => ViewFilename_; set => ViewFilename_ = value; }
         public string Ver { get; set; }
@@ -257,12 +286,24 @@ namespace FractalFun
             DroopMode.SelectedItem = 0;
             Mode = 0;
 
+            //
+            string nl = Environment.NewLine;
+
             // GPL stuff
             Ver = Assembly.GetExecutingAssembly().GetName().Version.ToString();
-            TxtLog.AppendText("Fractal Fun (Attractor Exploder) v" + Ver + Environment.NewLine);
-            TxtLog.AppendText("Copyright 2019 Dan Rhea" + Environment.NewLine);
-            TxtLog.AppendText("This program comes with ABSOLUTELY NO WARRANTY"+Environment.NewLine);
-            TxtLog.AppendText("This is free software, and you are welcome to redistribute it.");
+            TxtLog.AppendText("Fractal Fun (Attractor Exploder) v" + Ver + nl);
+            TxtLog.AppendText("Copyright 2019, 2020, 2921 Dan Rhea" + nl + nl);
+            TxtLog.AppendText("This program is free software: you can redistribute it and/or " + 
+                "modify it under the terms of the GNU General Public License " + 
+                "as published by the Free Software Foundation, either version " + 
+                "3 of the License, or (at your option) any later version." + nl + nl);
+            TxtLog.AppendText("This program is distributed in the hope that it will be" + 
+                "useful, but WITHOUT ANY WARRANTY; without even the" + 
+                "implied warranty of MERCHANTABILITY or FITNESS FOR" + 
+                "A PARTICULAR PURPOSE. See the GNU General Public License for more details." + nl + nl);
+            TxtLog.AppendText("You should have received a copy of the GNU General Public" + 
+                "License along with this program. Click the license button" + 
+                "for the license." + nl + nl);
 
             // Trigger the UI init
             timer1.Enabled = true;
@@ -308,6 +349,7 @@ namespace FractalFun
         /// <param name="e">Event args</param>
         private void BtnRender_Click(object sender, EventArgs e)
         {
+            Display.Refresh();
             IsLooping = CanLoop();
             if (IsLooping) { DoLoopRender(A1, B1, C1, D1); }
             else { DoRender(A1, B1, C1, D1); }
@@ -411,9 +453,14 @@ namespace FractalFun
             }
         }
 
+        /// <summary>
+        /// Dark mode checkbox change handler
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void CBXDarkMode_CheckedChanged(object sender, EventArgs e)
         {
-            if (CBXDarkMode .Checked)
+            if (CBXDarkMode.Checked)
             {
                 DarkMode = true;
             }
@@ -422,6 +469,23 @@ namespace FractalFun
                 DarkMode = false;
             }
 
+        }
+
+        /// <summary>
+        /// Stamp Mode checkbox change handler
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void CBXStampMode_CheckedChanged(object sender, EventArgs e)
+        {
+            if (CBXStampMode.Checked)
+            {
+                StampMode = true;
+            }
+            else
+            {
+                StampMode = false;
+            }
         }
 
         /// <summary>
@@ -475,12 +539,12 @@ namespace FractalFun
 
             // Move the height and width of our drawing
             // interface to read only text boxes for reference
-            TxtHeight.Text = Display.Height.ToString();
-            TxtWidth.Text = Display.Width.ToString();
-            H1 = (double)Display.Height;
-            W1 = (double)Display.Width;
-            MinX = (double)Display.Width;
-            MinY = (double)Display.Height;
+            TxtHeight.Text = "1050"; // Display.Height.ToString();
+            TxtWidth.Text = "1680"; // Display.Width.ToString();
+            H1 = 1050; // (double)Display.Height;
+            W1 = 1680; // (double)Display.Width;
+            MinX = 1680; // (double)Display.Width;
+            MinY = 1050; // (double)Display.Height;
 
             // Update the read only min/max values...
             // these will contain real values during render
@@ -608,12 +672,12 @@ namespace FractalFun
         {
             if (ICanHazResize)
             {
-                TxtHeight.Text = Display.Height.ToString();
-                TxtWidth.Text = Display.Width.ToString();
-                H1 = (double)Display.Height;
-                W1 = (double)Display.Width;
-                MinX = (double)Display.Width;
-                MinY = (double)Display.Height;
+                TxtHeight.Text = "1050"; // Display.Height.ToString();
+                TxtWidth.Text = "1680"; // Display.Width.ToString();
+                H1 = 1680; //(double)Display.Height;
+                W1 = 1050; //(double)Display.Width;
+                MinX = 1680;  //(double)Display.Width;
+                MinY = 1050;  //(double)Display.Height;
                 MaxX = 0.0;
                 MaxY = 0.0;
                 TxtMinX.Text = MinX.ToString();
@@ -730,6 +794,9 @@ namespace FractalFun
             double End = GetEnd();
             double Step = GetStep();
 
+            String Trace = "Batch render start: " + DateTime.Now.ToString() + Environment.NewLine;
+            TxtLog.AppendText(Trace);
+
             // Find out where we want to save image files
             SetSaveFolder.Description = "Set file save path";
             if (SetSaveFolder.ShowDialog() == DialogResult.OK)
@@ -745,7 +812,7 @@ namespace FractalFun
             // determine which range will we be using
             int PIndex = GetParamIndex();
 
-            if (Step > 0.0)
+            if (Step > 0.0) // Incrementing step
             {
                 IsLooping = true;
                 for (double Frame = Begin; Frame <= End; Frame += Step)
@@ -779,7 +846,7 @@ namespace FractalFun
                     if (HitTheBrakes) { break; }
                 }
             }
-            else
+            else // Decrementing step
             {
                 for (double Frame = Begin; Frame >= End; Frame -= Step)
                 {
@@ -814,6 +881,8 @@ namespace FractalFun
             }
             // Reset the brakes
             HitTheBrakes = false;
+            Trace = "Batch render done: " + DateTime.Now.ToString() + Environment.NewLine;
+            TxtLog.AppendText(Trace);
             Application.DoEvents();
         }
 
@@ -835,7 +904,17 @@ namespace FractalFun
                 BtnBreak.Enabled = true;
                 btnSave.Enabled = false;
 
+                string Trace = "A:" + A.ToString() + " B:" + B.ToString() +
+                    " C:" + C.ToString() + "D:" + D.ToString() + Environment.NewLine;
+                TxtLog.AppendText(Trace);
+                Application.DoEvents();
+
                 // Create a 32 bit ARGB bitmap to draw on
+                if (Display.HasChildren)
+                {
+                    Display.Image.Dispose();
+                }
+                Display.Refresh();
                 Bitmap Paper = MakePaper();
 
                 // Set up the paper...
@@ -856,6 +935,7 @@ namespace FractalFun
 
                 // Update the UI image with the clean sheet of paper
                 Display.Image = Paper;
+                //SnapShot = Paper;
                 Application.DoEvents();
 
                 // Init a few working variables
@@ -923,8 +1003,8 @@ namespace FractalFun
                         // new pixel appropriatrely
                         Paper.SetPixel((int)xs, (int)ys, GetColor(xs, ys, Paper));
 
-                        // Every 1000 iterations, update the UI and bitmap display
-                        if ((int)n % 1000 == 0)
+                        // Every 10,000 iterations, update the UI and bitmap display
+                        if ((int)n % 10000 == 0)
                         {
                             // Update the UI
                             TxtIteration.Text = i.ToString();
@@ -942,6 +1022,10 @@ namespace FractalFun
                 // Final post render UI and bitmap display update
                 TxtIteration.Text = i.ToString();
                 Display.Image = Paper;
+                if (StampMode)
+                {
+                    Stampy(TxtName.Text, A, B, C, D);
+                }
                 TxtMinX.Text = MinX.ToString();
                 TxtMaxX.Text = MaxX.ToString();
                 TxtMinY.Text = MinY.ToString();
@@ -964,6 +1048,7 @@ namespace FractalFun
         public Bitmap MakePaper()
         {
             return new Bitmap((int)W1, (int)H1, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
+            //return new Bitmap((int)Wid, (int)Hei, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
         }
 
         /// <summary>
@@ -1035,6 +1120,44 @@ namespace FractalFun
         }
 
         /// <summary>
+        /// The Stampy function will stamp the upper left corner of the rendered image with 
+        /// the attractor name as well as the values for a, b, c and d. This should be 
+        /// controlled via a UI checkbox (check the checkbox before calling Stampy.
+        /// Thank you to Gon Coding of Stackoverflow for the example of how to do this. 
+        /// You rock!
+        /// </summary>
+        /// <param name="name">The name of the attractor preset in use</param>
+        /// <param name="a">Value of double A</param>
+        /// <param name="b">Value of double B</param>
+        /// <param name="c">Value of double C</param>
+        /// <param name="d">Value of double D</param>
+        public void Stampy(string name, double a, double b, double c, double d)
+        {
+            Bitmap Velum = (Bitmap)Display.Image;
+            RectangleF WreckAndTangle = new RectangleF(0, 0, Velum.Width, Velum.Height);
+            Graphics Overlay = Graphics.FromImage(Velum);
+            Overlay.InterpolationMode = InterpolationMode.HighQualityBicubic;
+            Overlay.PixelOffsetMode = PixelOffsetMode.HighQuality;
+            Overlay.TextRenderingHint = TextRenderingHint.AntiAliasGridFit;
+            StringFormat Floormat = new StringFormat()
+            {
+                Alignment = StringAlignment.Near, // Left
+                LineAlignment = StringAlignment.Near // Top
+            };
+            string Mess = " " + name + "-A:" + a.ToString() + " B:" + b.ToString() + " C:" + b.ToString() + " D:" + b.ToString();
+            if (DarkMode)
+            {
+                Overlay.DrawString(Mess, new Font("Tahoma", 9), Brushes.White, WreckAndTangle, Floormat);
+            }
+            else
+            {
+                Overlay.DrawString(Mess, new Font("Tahoma", 9), Brushes.Black, WreckAndTangle, Floormat);
+            }
+            Overlay.Flush();
+            Display.Image = Velum;
+        }
+
+        /// <summary>
         /// Using the save file dialog, save the current image as a PNG file
         /// </summary>
         /// <param name="Frame">Current Loop value if looping</param>
@@ -1060,6 +1183,7 @@ namespace FractalFun
                 if (SaveFractal.ShowDialog() == DialogResult.OK)
                 {
                     SaveFile = SaveFractal.FileName;
+                    TxtLog.AppendText("File:" + SaveFile + Environment.NewLine);
                 }
                 else
                 {
@@ -1073,6 +1197,7 @@ namespace FractalFun
 
                 // Otherwise assemble the filename
                 SaveFile = BasePath1 + "\\" + "Attractor " + TxtName.Text + "-F" + Frame.ToString() + " " + Frac2 + ".png";
+                TxtLog.AppendText("File:" + SaveFile + Environment.NewLine);
             }
             // Save the bitmap as a 32 bit PNG file and update the save log
             Display.Image.Save(SaveFile, System.Drawing.Imaging.ImageFormat.Png);
@@ -1255,6 +1380,43 @@ namespace FractalFun
         {
             DoReset();
         }
+
+        private void Display_MouseUp(object sender, MouseEventArgs e)
+        {
+            Control c = sender as Control;
+            if (c == null) return;
+            WhatADrag = false;
+        }
+
+        private void Display_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Left)
+            {
+                SnapShot = Display.Image;
+                WhatADrag = true;
+                MouseDownLocation = e.Location;
+            }
+        }
+
+        private void Display_MouseMove(object sender, MouseEventArgs e)
+        {
+            Control c = sender as Control;
+
+            if (WhatADrag && c != null && SnapShot != null)
+            {
+                Frame = new Rectangle(-(MouseDownLocation.X - e.X), -(MouseDownLocation.Y - e.Y), SnapShot.Width, SnapShot.Height);
+                Display.Invalidate();
+            }
+        }
+
+        private void Display_Paint(object sender, PaintEventArgs e)
+        {
+            if (SnapShot != null)
+            {
+                e.Graphics.DrawImage(SnapShot, Frame);
+            }
+        }
+
     }
 
     /// <summary>

@@ -30,6 +30,7 @@
         {
             this.components = new System.ComponentModel.Container();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+            this.CBXStampMode = new System.Windows.Forms.CheckBox();
             this.label19 = new System.Windows.Forms.Label();
             this.DroopMode = new System.Windows.Forms.ComboBox();
             this.CBXDarkMode = new System.Windows.Forms.CheckBox();
@@ -106,6 +107,7 @@
             // splitContainer1.Panel1
             // 
             this.splitContainer1.Panel1.BackColor = System.Drawing.SystemColors.ControlDark;
+            this.splitContainer1.Panel1.Controls.Add(this.CBXStampMode);
             this.splitContainer1.Panel1.Controls.Add(this.label19);
             this.splitContainer1.Panel1.Controls.Add(this.DroopMode);
             this.splitContainer1.Panel1.Controls.Add(this.CBXDarkMode);
@@ -161,10 +163,22 @@
             // 
             // splitContainer1.Panel2
             // 
+            this.splitContainer1.Panel2.AutoScroll = true;
             this.splitContainer1.Panel2.Controls.Add(this.Display);
             this.splitContainer1.Size = new System.Drawing.Size(826, 475);
             this.splitContainer1.SplitterDistance = 337;
             this.splitContainer1.TabIndex = 0;
+            // 
+            // CBXStampMode
+            // 
+            this.CBXStampMode.AutoSize = true;
+            this.CBXStampMode.Location = new System.Drawing.Point(13, 335);
+            this.CBXStampMode.Name = "CBXStampMode";
+            this.CBXStampMode.Size = new System.Drawing.Size(87, 17);
+            this.CBXStampMode.TabIndex = 110;
+            this.CBXStampMode.Text = "Stamp image";
+            this.CBXStampMode.UseVisualStyleBackColor = true;
+            this.CBXStampMode.CheckedChanged += new System.EventHandler(this.CBXStampMode_CheckedChanged);
             // 
             // label19
             // 
@@ -199,6 +213,8 @@
             // CBXBreakMode
             // 
             this.CBXBreakMode.AutoSize = true;
+            this.CBXBreakMode.Checked = true;
+            this.CBXBreakMode.CheckState = System.Windows.Forms.CheckState.Checked;
             this.CBXBreakMode.Location = new System.Drawing.Point(13, 312);
             this.CBXBreakMode.Name = "CBXBreakMode";
             this.CBXBreakMode.Size = new System.Drawing.Size(133, 17);
@@ -213,12 +229,12 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.TxtLog.BackColor = System.Drawing.Color.PaleGoldenrod;
-            this.TxtLog.Location = new System.Drawing.Point(14, 332);
+            this.TxtLog.Location = new System.Drawing.Point(14, 358);
             this.TxtLog.Multiline = true;
             this.TxtLog.Name = "TxtLog";
             this.TxtLog.ReadOnly = true;
             this.TxtLog.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.TxtLog.Size = new System.Drawing.Size(311, 72);
+            this.TxtLog.Size = new System.Drawing.Size(311, 46);
             this.TxtLog.TabIndex = 106;
             // 
             // BtnLicense
@@ -701,6 +717,10 @@
             this.Display.TabIndex = 0;
             this.Display.TabStop = false;
             this.Display.SizeChanged += new System.EventHandler(this.Display_SizeChanged);
+            this.Display.Paint += new System.Windows.Forms.PaintEventHandler(this.Display_Paint);
+            this.Display.MouseDown += new System.Windows.Forms.MouseEventHandler(this.Display_MouseDown);
+            this.Display.MouseMove += new System.Windows.Forms.MouseEventHandler(this.Display_MouseMove);
+            this.Display.MouseUp += new System.Windows.Forms.MouseEventHandler(this.Display_MouseUp);
             // 
             // timer1
             // 
@@ -790,6 +810,7 @@
         private System.Windows.Forms.CheckBox CBXDarkMode;
         private System.Windows.Forms.Label label19;
         private System.Windows.Forms.ComboBox DroopMode;
+        private System.Windows.Forms.CheckBox CBXStampMode;
     }
 }
 
