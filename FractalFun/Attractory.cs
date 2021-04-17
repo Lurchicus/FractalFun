@@ -136,12 +136,15 @@ using System.Windows.Forms;
 ///               - Defaulted "Break stops all renders" to true. 
 /// 04/16/2021 DWR - Corrected references to Clifford Pickover's name...
 /// 1.1.27.0      I read his book and still got his last name wrong. It's
-///               not like I follow him on Twitter and Facebood either (I
+///               not like I follow him on Twitter and Facebook either (I
 ///               do follow him on both of course). 
 ///               I Feel pretty silly about it.
-/// 04/17/2021 DWR - I reworked the loop mode so it can work on
+/// 04/17/2021 DWR - I reworked the loop mode so it can work on (WIP)
 /// 1.1.28.0      multiple ranges and not stop until all loops hit end.
 ///               This actually greatly simplified the batch loop code.
+/// 04/17/2021 DWR - Added a "current" column for A through D on the UI
+/// 1.1.29.0      So it's easier to track looping progress. Tweaked the
+///               code and comments a bit.
 /// 
 /// Open/ToDo issues:
 ///               - I'm also doing some experimentation with converting
@@ -175,6 +178,10 @@ using System.Windows.Forms;
 /// 3. Need to add the GNU license and a simple viewer so the
 ///    user can read it if they want (form with a read only
 ///    text box on it).
+/// 4. WIP: I need to rework the loop mode so it can work on
+///    multiple ranges and not stop until all loops hit end.
+///    There's no reason this shouldn't work. Focus initially
+///    on the switch statements to remove the limitations.
 ///    
 /// </summary>
 namespace FractalFun
@@ -355,7 +362,7 @@ namespace FractalFun
             // GPL stuff
             Ver = Assembly.GetExecutingAssembly().GetName().Version.ToString();
             TxtLog.AppendText("Fractal Fun (Attractor Exploder) v" + Ver + nl);
-            TxtLog.AppendText("Copyright 2019, 2020, 2921 Dan Rhea" + nl + nl);
+            TxtLog.AppendText("Copyright 2019, 2020, 2021 Dan Rhea" + nl + nl);
             TxtLog.AppendText("This program is free software: you can redistribute it and/or " + 
                 "modify it under the terms of the GNU General Public License " + 
                 "as published by the Free Software Foundation, either version " + 
@@ -776,35 +783,6 @@ namespace FractalFun
         }
 
         /// <summary>
-        /// Get the loop start parameter value. Since we can only loop on
-        /// one of the four parameters, use the first one we find
-        /// </summary>
-        /// <returns>parameter value</returns>
-        //public double GetBegin()
-        //{
-        //    // Only one End and Step can be declared
-        //    if (AEnd1 != 0.0 && AStep1 != 0.0) { return A1; }
-        //    if (BEnd1 != 0.0 && BStep1 != 0.0) { return B1; }
-        //    if (CEnd1 != 0.0 && CStep1 != 0.0) { return C1; }
-        //    if (DEnd1 != 0.0 && DStep1 != 0.0) { return D1; }
-        //    return 0.0;
-        //}
-
-        /// <summary>
-        /// Get the loop end parameter value
-        /// </summary>
-        /// <returns>parameter value</returns>
-        //public double GetEnd()
-        //{
-        //    // Only one End and Step can be declared
-        //    if (AEnd1 != 0.0) { return AEnd1; }
-        //    if (BEnd1 != 0.0) { return BEnd1; }
-        //    if (CEnd1 != 0.0) { return CEnd1; }
-        //    if (DEnd1 != 0.0) { return DEnd1; }
-        //    return 0.0;
-        //}
-
-        /// <summary>
         /// See if there are any parameter loops to do
         /// </summary>
         public void SetLooping()
@@ -824,6 +802,11 @@ namespace FractalFun
             if (BLooping && !BDone) { BCurr += BStep; }
             if (CLooping && !CDone) { CCurr += CStep; }
             if (DLooping && !DDone) { DCurr += DStep; }
+            TxtACurr.Text = (ALooping) ? ACurr.ToString() : A1.ToString();
+            TxtBCurr.Text = (ALooping) ? BCurr.ToString() : B1.ToString();
+            TxtCCurr.Text = (ALooping) ? CCurr.ToString() : C1.ToString();
+            TxtDCurr.Text = (ALooping) ? DCurr.ToString() : D1.ToString();
+            Application.DoEvents();
         }
 
         /// <summary>
@@ -917,12 +900,17 @@ namespace FractalFun
                 BasePath1 = null;
             }
 
-            // determine which range will we be using
-            //int PIndex = GetParamIndex();
-
             SetLooping();
             IsLooping = CanLoop();
             int Frame = 1;
+
+            // Show the initial current values
+            TxtACurr.Text = (ALooping) ? ACurr.ToString() : A1.ToString();
+            TxtBCurr.Text = (BLooping) ? BCurr.ToString() : B1.ToString();
+            TxtCCurr.Text = (CLooping) ? CCurr.ToString() : C1.ToString();
+            TxtDCurr.Text = (DLooping) ? DCurr.ToString() : D1.ToString();
+            Application.DoEvents();
+
             while (!AllDone() && IsLooping)
             {
                 TxtFrame.Text = Frame.ToString();
@@ -1478,7 +1466,6 @@ namespace FractalFun
                 e.Graphics.DrawImage(SnapShot, Frame);
             }
         }
-
     }
 
     /// <summary>

@@ -30,6 +30,11 @@
         {
             this.components = new System.ComponentModel.Container();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+            this.label20 = new System.Windows.Forms.Label();
+            this.TxtDCurr = new System.Windows.Forms.TextBox();
+            this.TxtCCurr = new System.Windows.Forms.TextBox();
+            this.TxtBCurr = new System.Windows.Forms.TextBox();
+            this.TxtACurr = new System.Windows.Forms.TextBox();
             this.CBXStampMode = new System.Windows.Forms.CheckBox();
             this.label19 = new System.Windows.Forms.Label();
             this.DroopMode = new System.Windows.Forms.ComboBox();
@@ -107,6 +112,11 @@
             // splitContainer1.Panel1
             // 
             this.splitContainer1.Panel1.BackColor = System.Drawing.SystemColors.ControlDark;
+            this.splitContainer1.Panel1.Controls.Add(this.label20);
+            this.splitContainer1.Panel1.Controls.Add(this.TxtDCurr);
+            this.splitContainer1.Panel1.Controls.Add(this.TxtCCurr);
+            this.splitContainer1.Panel1.Controls.Add(this.TxtBCurr);
+            this.splitContainer1.Panel1.Controls.Add(this.TxtACurr);
             this.splitContainer1.Panel1.Controls.Add(this.CBXStampMode);
             this.splitContainer1.Panel1.Controls.Add(this.label19);
             this.splitContainer1.Panel1.Controls.Add(this.DroopMode);
@@ -168,6 +178,55 @@
             this.splitContainer1.Size = new System.Drawing.Size(826, 475);
             this.splitContainer1.SplitterDistance = 337;
             this.splitContainer1.TabIndex = 0;
+            // 
+            // label20
+            // 
+            this.label20.AutoSize = true;
+            this.label20.Location = new System.Drawing.Point(257, 62);
+            this.label20.Name = "label20";
+            this.label20.Size = new System.Drawing.Size(26, 13);
+            this.label20.TabIndex = 115;
+            this.label20.Text = "Curr";
+            // 
+            // TxtDCurr
+            // 
+            this.TxtDCurr.BackColor = System.Drawing.Color.DeepSkyBlue;
+            this.TxtDCurr.Location = new System.Drawing.Point(260, 156);
+            this.TxtDCurr.Name = "TxtDCurr";
+            this.TxtDCurr.ReadOnly = true;
+            this.TxtDCurr.Size = new System.Drawing.Size(63, 20);
+            this.TxtDCurr.TabIndex = 114;
+            this.TxtDCurr.Text = "0.0";
+            // 
+            // TxtCCurr
+            // 
+            this.TxtCCurr.BackColor = System.Drawing.Color.DeepSkyBlue;
+            this.TxtCCurr.Location = new System.Drawing.Point(260, 130);
+            this.TxtCCurr.Name = "TxtCCurr";
+            this.TxtCCurr.ReadOnly = true;
+            this.TxtCCurr.Size = new System.Drawing.Size(63, 20);
+            this.TxtCCurr.TabIndex = 113;
+            this.TxtCCurr.Text = "0.0";
+            // 
+            // TxtBCurr
+            // 
+            this.TxtBCurr.BackColor = System.Drawing.Color.DeepSkyBlue;
+            this.TxtBCurr.Location = new System.Drawing.Point(260, 104);
+            this.TxtBCurr.Name = "TxtBCurr";
+            this.TxtBCurr.ReadOnly = true;
+            this.TxtBCurr.Size = new System.Drawing.Size(63, 20);
+            this.TxtBCurr.TabIndex = 112;
+            this.TxtBCurr.Text = "0.0";
+            // 
+            // TxtACurr
+            // 
+            this.TxtACurr.BackColor = System.Drawing.Color.DeepSkyBlue;
+            this.TxtACurr.Location = new System.Drawing.Point(260, 78);
+            this.TxtACurr.Name = "TxtACurr";
+            this.TxtACurr.ReadOnly = true;
+            this.TxtACurr.Size = new System.Drawing.Size(63, 20);
+            this.TxtACurr.TabIndex = 111;
+            this.TxtACurr.Text = "0.0";
             // 
             // CBXStampMode
             // 
@@ -292,7 +351,7 @@
             // TxtDStep
             // 
             this.TxtDStep.BackColor = System.Drawing.Color.Yellow;
-            this.TxtDStep.Location = new System.Drawing.Point(274, 156);
+            this.TxtDStep.Location = new System.Drawing.Point(204, 156);
             this.TxtDStep.Name = "TxtDStep";
             this.TxtDStep.Size = new System.Drawing.Size(50, 20);
             this.TxtDStep.TabIndex = 18;
@@ -302,7 +361,7 @@
             // TxtCStep
             // 
             this.TxtCStep.BackColor = System.Drawing.Color.Yellow;
-            this.TxtCStep.Location = new System.Drawing.Point(274, 130);
+            this.TxtCStep.Location = new System.Drawing.Point(204, 130);
             this.TxtCStep.Name = "TxtCStep";
             this.TxtCStep.Size = new System.Drawing.Size(50, 20);
             this.TxtCStep.TabIndex = 16;
@@ -312,9 +371,9 @@
             // TxtDEnd
             // 
             this.TxtDEnd.BackColor = System.Drawing.Color.Pink;
-            this.TxtDEnd.Location = new System.Drawing.Point(168, 156);
+            this.TxtDEnd.Location = new System.Drawing.Point(133, 156);
             this.TxtDEnd.Name = "TxtDEnd";
-            this.TxtDEnd.Size = new System.Drawing.Size(100, 20);
+            this.TxtDEnd.Size = new System.Drawing.Size(65, 20);
             this.TxtDEnd.TabIndex = 17;
             this.TxtDEnd.Text = "0.0";
             this.TxtDEnd.Leave += new System.EventHandler(this.TxtDEnd_Leave);
@@ -322,9 +381,9 @@
             // TxtCEnd
             // 
             this.TxtCEnd.BackColor = System.Drawing.Color.Pink;
-            this.TxtCEnd.Location = new System.Drawing.Point(168, 130);
+            this.TxtCEnd.Location = new System.Drawing.Point(133, 130);
             this.TxtCEnd.Name = "TxtCEnd";
-            this.TxtCEnd.Size = new System.Drawing.Size(100, 20);
+            this.TxtCEnd.Size = new System.Drawing.Size(65, 20);
             this.TxtCEnd.TabIndex = 15;
             this.TxtCEnd.Text = "0.0";
             this.TxtCEnd.Leave += new System.EventHandler(this.TxtCEnd_Leave);
@@ -332,7 +391,7 @@
             // TxtBStep
             // 
             this.TxtBStep.BackColor = System.Drawing.Color.Yellow;
-            this.TxtBStep.Location = new System.Drawing.Point(274, 104);
+            this.TxtBStep.Location = new System.Drawing.Point(204, 104);
             this.TxtBStep.Name = "TxtBStep";
             this.TxtBStep.Size = new System.Drawing.Size(50, 20);
             this.TxtBStep.TabIndex = 14;
@@ -342,9 +401,9 @@
             // TxtBEnd
             // 
             this.TxtBEnd.BackColor = System.Drawing.Color.Pink;
-            this.TxtBEnd.Location = new System.Drawing.Point(168, 104);
+            this.TxtBEnd.Location = new System.Drawing.Point(133, 104);
             this.TxtBEnd.Name = "TxtBEnd";
-            this.TxtBEnd.Size = new System.Drawing.Size(100, 20);
+            this.TxtBEnd.Size = new System.Drawing.Size(65, 20);
             this.TxtBEnd.TabIndex = 13;
             this.TxtBEnd.Text = "0.0";
             this.TxtBEnd.Leave += new System.EventHandler(this.TxtBEnd_Leave);
@@ -352,7 +411,7 @@
             // label16
             // 
             this.label16.AutoSize = true;
-            this.label16.Location = new System.Drawing.Point(271, 62);
+            this.label16.Location = new System.Drawing.Point(201, 62);
             this.label16.Name = "label16";
             this.label16.Size = new System.Drawing.Size(29, 13);
             this.label16.TabIndex = 37;
@@ -361,7 +420,7 @@
             // TxtAStep
             // 
             this.TxtAStep.BackColor = System.Drawing.Color.Yellow;
-            this.TxtAStep.Location = new System.Drawing.Point(274, 78);
+            this.TxtAStep.Location = new System.Drawing.Point(204, 78);
             this.TxtAStep.Name = "TxtAStep";
             this.TxtAStep.Size = new System.Drawing.Size(50, 20);
             this.TxtAStep.TabIndex = 12;
@@ -371,7 +430,7 @@
             // label15
             // 
             this.label15.AutoSize = true;
-            this.label15.Location = new System.Drawing.Point(165, 62);
+            this.label15.Location = new System.Drawing.Point(130, 62);
             this.label15.Name = "label15";
             this.label15.Size = new System.Drawing.Size(72, 13);
             this.label15.TabIndex = 35;
@@ -380,9 +439,9 @@
             // TxtAEnd
             // 
             this.TxtAEnd.BackColor = System.Drawing.Color.Pink;
-            this.TxtAEnd.Location = new System.Drawing.Point(168, 78);
+            this.TxtAEnd.Location = new System.Drawing.Point(133, 78);
             this.TxtAEnd.Name = "TxtAEnd";
-            this.TxtAEnd.Size = new System.Drawing.Size(100, 20);
+            this.TxtAEnd.Size = new System.Drawing.Size(65, 20);
             this.TxtAEnd.TabIndex = 11;
             this.TxtAEnd.Text = "0.0";
             this.TxtAEnd.Leave += new System.EventHandler(this.TxtAEnd_Leave);
@@ -673,7 +732,7 @@
             this.TxtD.BackColor = System.Drawing.Color.Lime;
             this.TxtD.Location = new System.Drawing.Point(62, 156);
             this.TxtD.Name = "TxtD";
-            this.TxtD.Size = new System.Drawing.Size(100, 20);
+            this.TxtD.Size = new System.Drawing.Size(65, 20);
             this.TxtD.TabIndex = 4;
             this.TxtD.Text = "0.0";
             this.TxtD.Leave += new System.EventHandler(this.TxtD_Leave);
@@ -683,7 +742,7 @@
             this.TxtC.BackColor = System.Drawing.Color.Lime;
             this.TxtC.Location = new System.Drawing.Point(62, 130);
             this.TxtC.Name = "TxtC";
-            this.TxtC.Size = new System.Drawing.Size(100, 20);
+            this.TxtC.Size = new System.Drawing.Size(65, 20);
             this.TxtC.TabIndex = 3;
             this.TxtC.Text = "0.0";
             this.TxtC.Leave += new System.EventHandler(this.TxtC_Leave);
@@ -693,7 +752,7 @@
             this.TxtB.BackColor = System.Drawing.Color.Lime;
             this.TxtB.Location = new System.Drawing.Point(62, 104);
             this.TxtB.Name = "TxtB";
-            this.TxtB.Size = new System.Drawing.Size(100, 20);
+            this.TxtB.Size = new System.Drawing.Size(65, 20);
             this.TxtB.TabIndex = 2;
             this.TxtB.Text = "0.0";
             this.TxtB.Leave += new System.EventHandler(this.TxtB_Leave);
@@ -703,7 +762,7 @@
             this.TxtA.BackColor = System.Drawing.Color.Lime;
             this.TxtA.Location = new System.Drawing.Point(62, 78);
             this.TxtA.Name = "TxtA";
-            this.TxtA.Size = new System.Drawing.Size(100, 20);
+            this.TxtA.Size = new System.Drawing.Size(65, 20);
             this.TxtA.TabIndex = 1;
             this.TxtA.Text = "0.0";
             this.TxtA.Leave += new System.EventHandler(this.TxtA_Leave);
@@ -811,6 +870,11 @@
         private System.Windows.Forms.Label label19;
         private System.Windows.Forms.ComboBox DroopMode;
         private System.Windows.Forms.CheckBox CBXStampMode;
+        private System.Windows.Forms.Label label20;
+        private System.Windows.Forms.TextBox TxtDCurr;
+        private System.Windows.Forms.TextBox TxtCCurr;
+        private System.Windows.Forms.TextBox TxtBCurr;
+        private System.Windows.Forms.TextBox TxtACurr;
     }
 }
 
