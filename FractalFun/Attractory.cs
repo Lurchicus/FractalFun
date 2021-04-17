@@ -72,10 +72,10 @@ using System.Windows.Forms;
 ///               viewer form as a modal dialog.
 ///               - Resolves issue 3
 /// 4/30/2019 DWR - After I did some research I discovered that the 
-/// 1.1.22.0      attractors this visualizer creates are all Pickford
+/// 1.1.22.0      attractors this visualizer creates are all Pickover
 ///               attractors so I'm changing "strange attractor" 
-///               references to "Pickford attractors". Credit where
-///               credit is due! "Pickford! I read your book!" :)
+///               references to "Pickover attractors". Credit where
+///               credit is due! "Pickover! I read your book!" :)
 ///               - I darkened the settings panel and I'm working on a
 ///               dark mode that will draw the attractors on a black
 ///               background with dark gray through white pixels.
@@ -86,7 +86,7 @@ using System.Windows.Forms;
 ///               rather than the current gray scale each time I hit a
 ///               lit pixel. Eventually I will expand out to more 
 ///               visualizers for other attractors and introduce a few
-///               - alternate Pickford attractor variants added with a 
+///               - alternate Pickover attractor variants added with a 
 ///               drop down list to select them
 ///               
 ///                 xnew=cos(y*b)+c*sin(x*b)
@@ -292,9 +292,9 @@ namespace FractalFun
             LoadPredefines();
 
             // Load attractor type drop down
-            DroopMode.Items.Insert(0, "Pickford attractor");
-            DroopMode.Items.Insert(1, "Pickford attractor (sin,cos)");
-            DroopMode.Items.Insert(2, "Pickford attractor (cos)");
+            DroopMode.Items.Insert(0, "Pickover attractor");
+            DroopMode.Items.Insert(1, "Pickover attractor (sin,cos)");
+            DroopMode.Items.Insert(2, "Pickover attractor (cos)");
             DroopMode.SelectedItem = 0;
             Mode = 0;
 
@@ -1156,7 +1156,7 @@ namespace FractalFun
                 Alignment = StringAlignment.Near, // Left
                 LineAlignment = StringAlignment.Near // Top
             };
-            string Mess = " " + name + "-A:" + a.ToString() + " B:" + b.ToString() + " C:" + b.ToString() + " D:" + b.ToString();
+            string Mess = " " + name + "-A:" + a.ToString() + " B:" + b.ToString() + " C:" + c.ToString() + " D:" + d.ToString();
             if (DarkMode)
             {
                 Overlay.DrawString(Mess, new Font("Tahoma", 9), Brushes.White, WreckAndTangle, Floormat);

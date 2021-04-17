@@ -739,7 +739,7 @@
             this.ClientSize = new System.Drawing.Size(826, 475);
             this.Controls.Add(this.splitContainer1);
             this.Name = "Attractory";
-            this.Text = "Attractor Exploder (Pickford Attractors)";
+            this.Text = "Attractor Exploder (Pickover Attractors)";
             this.Load += new System.EventHandler(this.Form1_Load);
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel1.PerformLayout();
