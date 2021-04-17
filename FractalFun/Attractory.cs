@@ -134,7 +134,15 @@ using System.Windows.Forms;
 ///                the order of MinX, MaxX, MinY and MaxY (much less
 ///                confusing this way).
 ///               - Defaulted "Break stops all renders" to true. 
-///
+/// 04/16/2021 DWR - Corrected references to Clifford Pickover's name...
+/// 1.1.27.0      I read his book and still got his last name wrong. It's
+///               not like I follow him on Twitter and Facebood either (I
+///               do follow him on both of course). 
+///               I Feel pretty silly about it.
+/// 04/17/2021 DWR - I reworked the loop mode so it can work on
+/// 1.1.28.0      multiple ranges and not stop until all loops hit end.
+///               This actually greatly simplified the batch loop code.
+/// 
 /// Open/ToDo issues:
 ///               - I'm also doing some experimentation with converting
 ///               our ARGB colors to HSV and looping through the hues
@@ -144,7 +152,15 @@ using System.Windows.Forms;
 ///               predefined gradients. Hacking away at this.
 ///               - Thinking about adding a checkbox to hide (minimize)
 ///               the left panel during render to maximize the visible
-///               area for the image panel, 
+///               area for the image panel.
+///               - There is an issue with initializing the "paper". It
+///               works correctly when creating multiple renders but not
+///               for single renders. I'm doing something in one path 
+///               that I'm not doing in the other.
+///               - I need to rework the loop mode so it can work on
+///               multiple ranges and not stop until all loops hit end.
+///               There's no reason this shouldn't work. Focus initially
+///               on the switch statements to remove the limitations.
 /// 
 /// Resolved issues:
 /// 1. Determine if a break during looping kills the whole
@@ -182,6 +198,21 @@ namespace FractalFun
         private double BStep = 0.0;             // B parameter loop step
         private double CStep = 0.0;             // C parameter loop step
         private double DStep = 0.0;             // D parameter loop step
+
+        private bool ALooping = false;          // A is looping
+        private bool BLooping = false;          // B is looping
+        private bool CLooping = false;          // C is looping
+        private bool DLooping = false;          // D is looping
+
+        private double ACurr = 0.0;             // A loop value
+        private double BCurr = 0.0;             // B loop value
+        private double CCurr = 0.0;             // C loop value
+        private double DCurr = 0.0;             // D loop value
+
+        private bool ADone = false;             // A loop done flag
+        private bool BDone = false;             // B loop done flag
+        private bool CDone = false;             // C loop done flag
+        private bool DDone = false;             // D loop done flag
 
         private double MinX_ = 0.0;             // Attractor post scale minimum x
         private double MinY_ = 0.0;             // Attractor post scale maximum x
@@ -235,6 +266,21 @@ namespace FractalFun
         public double MaxX { get => MaxX_; set => MaxX_ = value; }
         public double MaxY { get => MaxY_; set => MaxY_ = value; }
 
+        public bool ALooping1 { get => ALooping; set => ALooping = value; }
+        public bool BLooping1 { get => BLooping; set => BLooping = value; }
+        public bool CLooping1 { get => CLooping; set => CLooping = value; }
+        public bool DLooping1 { get => DLooping; set => DLooping = value; }
+
+        public double ACurr1 { get => ACurr; set => ACurr = value; }
+        public double BCurr1 { get => BCurr; set => BCurr = value; }
+        public double CCurr1 { get => CCurr; set => CCurr = value; }
+        public double DCurr1 { get => DCurr; set => DCurr = value; }
+
+        public bool ADone1 { get => ADone; set => ADone = value; }
+        public bool BDone1 { get => BDone; set => BDone = value; }
+        public bool CDone1 { get => CDone; set => CDone = value; }
+        public bool DDone1 { get => DDone; set => DDone = value; }
+
         public int IScale { get => Scale_; set => Scale_ = value; }
         public string Name1 { get => Name_; set => Name_ = value; }
         public bool ICanHazResize { get => CanHazResize; set => CanHazResize = value; }
@@ -281,6 +327,11 @@ namespace FractalFun
             BStep1 = 0.0;
             CStep1 = 0.0;
             DStep1 = 0.0;
+
+            ACurr1 = A1;
+            BCurr1 = B1;
+            CCurr1 = C1;
+            DCurr1 = D1;
 
             IsLooping = false;
             IScale = 300;
@@ -501,7 +552,7 @@ namespace FractalFun
         }
 
         /// <summary>
-        /// Load the predefines file (Json) an load the drop down list
+        /// Load the predefines file (Json) and load the drop down list
         /// </summary>
         public void LoadPredefines()
         {
@@ -555,8 +606,8 @@ namespace FractalFun
             TxtWidth.Text = "1680"; // Display.Width.ToString();
             H1 = 1050; // (double)Display.Height;
             W1 = 1680; // (double)Display.Width;
-            MinX = 1680; // (double)Display.Width;
             MinY = 1050; // (double)Display.Height;
+            MinX = 1680; // (double)Display.Width;
 
             // Update the read only min/max values...
             // these will contain real values during render
@@ -707,11 +758,7 @@ namespace FractalFun
         /// <returns>bool indicating if rendering can be done</returns>
         public bool CanRender()
         {
-            if (A1 != 0.0 && B1 != 0.0)
-            {
-                return true;
-            }
-            else { return false; }
+            return (A1 != 0.0 && B1 != 0.0);
         }
 
         /// <summary>
@@ -720,14 +767,12 @@ namespace FractalFun
         /// <returns>true if looping is set</returns>
         public bool CanLoop()
         {
-            if ((AEnd1 != 0.0 && AStep1 != 0.0) ||
-                (BEnd1 != 0.0 && BStep1 != 0.0) ||
-                (CEnd1 != 0.0 && CStep1 != 0.0) ||
-                (DEnd1 != 0.0 && DStep1 != 0.0))
-            {
-                return true;
-            }
-            else { return false; }
+            if (AEnd1 != 0.0 && AStep1 != 0.0) { ALooping1 = true; ACurr = A; }
+            if (BEnd1 != 0.0 && BStep1 != 0.0) { BLooping1 = true; BCurr = B; }
+            if (CEnd1 != 0.0 && CStep1 != 0.0) { CLooping1 = true; CCurr = C; }
+            if (DEnd1 != 0.0 && DStep1 != 0.0) { DLooping1 = true; DCurr = D; }
+
+            return (ALooping1 || BLooping1 || CLooping1 || DLooping1);     
         }
 
         /// <summary>
@@ -735,57 +780,108 @@ namespace FractalFun
         /// one of the four parameters, use the first one we find
         /// </summary>
         /// <returns>parameter value</returns>
-        public double GetBegin()
-        {
-            // Only one End and Step can be declared
-            if (AEnd1 != 0.0 && AStep1 != 0.0) { return A1; }
-            if (BEnd1 != 0.0 && BStep1 != 0.0) { return B1; }
-            if (CEnd1 != 0.0 && CStep1 != 0.0) { return C1; }
-            if (DEnd1 != 0.0 && DStep1 != 0.0) { return D1; }
-            return 0.0;
-        }
+        //public double GetBegin()
+        //{
+        //    // Only one End and Step can be declared
+        //    if (AEnd1 != 0.0 && AStep1 != 0.0) { return A1; }
+        //    if (BEnd1 != 0.0 && BStep1 != 0.0) { return B1; }
+        //    if (CEnd1 != 0.0 && CStep1 != 0.0) { return C1; }
+        //    if (DEnd1 != 0.0 && DStep1 != 0.0) { return D1; }
+        //    return 0.0;
+        //}
 
         /// <summary>
         /// Get the loop end parameter value
         /// </summary>
         /// <returns>parameter value</returns>
-        public double GetEnd()
+        //public double GetEnd()
+        //{
+        //    // Only one End and Step can be declared
+        //    if (AEnd1 != 0.0) { return AEnd1; }
+        //    if (BEnd1 != 0.0) { return BEnd1; }
+        //    if (CEnd1 != 0.0) { return CEnd1; }
+        //    if (DEnd1 != 0.0) { return DEnd1; }
+        //    return 0.0;
+        //}
+
+        /// <summary>
+        /// See if there are any parameter loops to do
+        /// </summary>
+        public void SetLooping()
         {
-            // Only one End and Step can be declared
-            if (AEnd1 != 0.0) { return AEnd1; }
-            if (BEnd1 != 0.0) { return BEnd1; }
-            if (CEnd1 != 0.0) { return CEnd1; }
-            if (DEnd1 != 0.0) { return DEnd1; }
-            return 0.0;
+            if (AEnd != 0.0 && AStep != 0.0) { ALooping = true; ADone = false; }
+            if (BEnd != 0.0 && BStep != 0.0) { BLooping = true; BDone = false; }
+            if (CEnd != 0.0 && CStep != 0.0) { CLooping = true; CDone = false; }
+            if (DEnd != 0.0 && DStep != 0.0) { DLooping = true; DDone = false; }
         }
 
         /// <summary>
-        /// Get the loop step value
+        /// Increment looping parameters if looping and not done
         /// </summary>
-        /// <returns>parameter value</returns>
-        public double GetStep()
+        public void DoLoops()
         {
-            // Only one End and Step can be declared
-            if (AStep1 != 0.0) { return AStep1; }
-            if (BStep1 != 0.0) { return BStep1; }
-            if (CStep1 != 0.0) { return CStep1; }
-            if (DStep1 != 0.0) { return DStep1; }
-            return 0.0;
+            if (ALooping && !ADone) { ACurr += AStep; }
+            if (BLooping && !BDone) { BCurr += BStep; }
+            if (CLooping && !CDone) { CCurr += CStep; }
+            if (DLooping && !DDone) { DCurr += DStep; }
         }
 
         /// <summary>
-        /// Get the index so we know if we are looping on A, B, C or D
+        /// Determine if looping parameters are done or not
         /// </summary>
-        /// <returns>1 through 4 (for A through D) or 0 for none</returns>
-        public int GetParamIndex()
+        /// <returns>bool: True if ALL looping parameters are done looping</returns>
+        public bool AllDone()
         {
-            // There can be only one! 
-            if (AStep1 != 0.0) { return 1; }
-            if (BStep1 != 0.0) { return 2; }
-            if (CStep1 != 0.0) { return 3; }
-            if (DStep1 != 0.0) { return 4; }
-            // Okay, so there can be none too...
-            return 0;
+            int LoopCount = 0;
+            int DoneCount = 0;
+            if (ALooping) {
+                LoopCount++;
+                if (AStep > 0)
+                {
+                    if (ACurr >= AEnd) { ADone = true; DoneCount++; }
+                }
+                else
+                {
+                    if (ACurr <= AEnd) { ADone = true; DoneCount++; }
+                }
+            }
+            if (BLooping)
+            {
+                LoopCount++;
+                if (BStep > 0)
+                {
+                    if (BCurr >= BEnd) { BDone = true; DoneCount++; }
+                }
+                else
+                {
+                    if (BCurr <= BEnd) { BDone = true; DoneCount++; }
+                }
+            }
+            if (CLooping)
+            {
+                LoopCount++;
+                if (CStep > 0)
+                {
+                    if (CCurr >= CEnd) { CDone = true; DoneCount++; }
+                }
+                else
+                {
+                    if (CCurr <= CEnd) { CDone = true; DoneCount++; }
+                }
+            }
+            if (DLooping)
+            {
+                LoopCount++;
+                if (DStep > 0)
+                {
+                    if (DCurr >= DEnd) { DDone = true; DoneCount++; }
+                }
+                else
+                {
+                    if (DCurr <= DEnd) { DDone = true; DoneCount++; }
+                }
+            }
+            return (LoopCount == DoneCount);
         }
 
         /// <summary>
@@ -801,10 +897,10 @@ namespace FractalFun
         /// <param name="D">D1</param>
         public void DoLoopRender(double A, double B, double C, double D)
         {
-            int IFrame = 0;
-            double Begin = GetBegin();
-            double End = GetEnd();
-            double Step = GetStep();
+            //int IFrame = 0;
+            //double Begin = GetBegin();
+            //double End = GetEnd();
+            //double Step = GetStep();
 
             String Trace = "Batch render start: " + DateTime.Now.ToString() + Environment.NewLine;
             TxtLog.AppendText(Trace);
@@ -822,76 +918,33 @@ namespace FractalFun
             }
 
             // determine which range will we be using
-            int PIndex = GetParamIndex();
+            //int PIndex = GetParamIndex();
 
-            if (Step > 0.0) // Incrementing step
+            SetLooping();
+            IsLooping = CanLoop();
+            int Frame = 1;
+            while (!AllDone() && IsLooping)
             {
-                IsLooping = true;
-                for (double Frame = Begin; Frame <= End; Frame += Step)
-                {
-                    IFrame++;
-                    TxtFrame.Text = IFrame.ToString() + " (" + Frame.ToString() + ")";
+                TxtFrame.Text = Frame.ToString();
+                if (ALooping) { A = ACurr; }
+                if (BLooping) { B = BCurr; }
+                if (CLooping) { C = CCurr; }
+                if (DLooping) { D = DCurr; }
 
-                    switch (PIndex)
-                    {
-                        case 1: // Loop on A
-                            DoRender(Frame, B, C, D);
-                            DoSaveFile(IFrame, Frame, B, C, D);
-                            break;
-                        case 2: // Loop on B
-                            DoRender(A, Frame, C, D);
-                            DoSaveFile(IFrame, A, Frame, C, D);
-                            break;
-                        case 3: // Loop on C
-                            DoRender(A, B, Frame, D);
-                            DoSaveFile(IFrame, A, B, Frame, D);
-                            break;
-                        case 4: // Loop on D
-                            DoRender(A, B, C, Frame);
-                            DoSaveFile(IFrame, A, B, C, Frame);
-                            break;
-                        default:
-                            break;
-                    }
-                    DoReset();
-                    // See if they hit the brakes
-                    if (HitTheBrakes) { break; }
-                }
-            }
-            else // Decrementing step
-            {
-                for (double Frame = Begin; Frame >= End; Frame -= Step)
-                {
-                    IFrame++;
-                    TxtFrame.Text = IFrame.ToString() + " (" + Frame.ToString() + ")";
+                DoRender((ALooping) ? ACurr : A, (BLooping) ? BCurr : B,
+                         (CLooping) ? CCurr : C, (DLooping) ? DCurr : D);
 
-                    switch (PIndex)
-                    {
-                        case 1: // Loop on A
-                            DoRender(Frame, B, C, D);
-                            DoSaveFile(IFrame, Frame, B, C, D);
-                            break;
-                        case 2: // Loop on B
-                            DoRender(A, Frame, C, D);
-                            DoSaveFile(IFrame, A, Frame, C, D);
-                            break;
-                        case 3: // Loop on C
-                            DoRender(A, B, Frame, D);
-                            DoSaveFile(IFrame, A, B, Frame, D);
-                            break;
-                        case 4: // Loop on D
-                            DoRender(A, B, C, Frame);
-                            DoSaveFile(IFrame, A, B, C, Frame);
-                            break;
-                        default:
-                            break;
-                    }
-                    DoReset();
-                    // See if they hit the brakes
-                    if (HitTheBrakes) { break; }
-                }
+                DoSaveFile(Frame, 
+                        (ALooping) ? ACurr : A, (BLooping) ? BCurr : B,
+                        (CLooping) ? CCurr : C, (DLooping) ? DCurr : D);
+
+                DoReset();
+                DoLoops();
+                Frame++;
+                if (HitTheBrakes) { break; }
             }
-            // Reset the brakes
+
+            // Reset the brakes and finish up
             HitTheBrakes = false;
             Trace = "Batch render done: " + DateTime.Now.ToString() + Environment.NewLine;
             TxtLog.AppendText(Trace);
@@ -1395,8 +1448,7 @@ namespace FractalFun
 
         private void Display_MouseUp(object sender, MouseEventArgs e)
         {
-            Control c = sender as Control;
-            if (c == null) return;
+            if (!(sender is Control)) return;
             WhatADrag = false;
         }
 
@@ -1412,9 +1464,7 @@ namespace FractalFun
 
         private void Display_MouseMove(object sender, MouseEventArgs e)
         {
-            Control c = sender as Control;
-
-            if (WhatADrag && c != null && SnapShot != null)
+            if (WhatADrag && sender is Control && SnapShot != null)
             {
                 Frame = new Rectangle(-(MouseDownLocation.X - e.X), -(MouseDownLocation.Y - e.Y), SnapShot.Width, SnapShot.Height);
                 Display.Invalidate();

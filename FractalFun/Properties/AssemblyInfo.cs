@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("FractalFun")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyDescription("Fractal Exploration Program")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
+[assembly: AssemblyCompany("Dan Rhea")]
 [assembly: AssemblyProduct("FractalFun")]
-[assembly: AssemblyCopyright("Copyright © 2019, 2020, 2021")]
+[assembly: AssemblyCopyright("Copyright © 2019, 2020, 2021 Dan Rhea (GNU GPL3 License)")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -31,5 +31,5 @@ using System.Runtime.InteropServices;
 // You can specify all the values or you can default the Build and Revision Numbers
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("1.1.27.0")]
-[assembly: AssemblyFileVersion("1.1.27.0")]
+[assembly: AssemblyVersion("1.1.28.0")]
+[assembly: AssemblyFileVersion("1.1.28.0")]
