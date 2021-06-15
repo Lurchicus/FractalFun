@@ -12,12 +12,12 @@ using System.Windows.Forms;
 /// <summary>
 /// FractalFun.Attractory
 /// 
-/// Creates Pickford attractors based on the code described in the book 
+/// Creates Pickover attractors based on the code described in the book 
 /// "Chaos In Wonderland" by Clifford A. Pickover, 1994, pg 267 M.2,
 /// ISBN 0-312-10743-9 as well as adhoc or original predefined attractors
 /// 
 /// Fractal Fun (Attractor Exploder)
-/// Copyright(C) 2019 by Dan Rhea
+/// Copyright(C) 2019, 2020, 2021 by Dan Rhea
 ///
 /// This program is free software: you can redistribute it and/or modify
 /// it under the terms of the GNU General Public License as published by
@@ -246,6 +246,7 @@ namespace FractalFun
         private bool WhatADrag;
         private Image SnapShot;
         private Rectangle Frame;
+        Bitmap Paper;
 
         /// <summary>
         /// Parameters (see above for the objects encapsulated below)
@@ -880,11 +881,6 @@ namespace FractalFun
         /// <param name="D">D1</param>
         public void DoLoopRender(double A, double B, double C, double D)
         {
-            //int IFrame = 0;
-            //double Begin = GetBegin();
-            //double End = GetEnd();
-            //double Step = GetStep();
-
             String Trace = "Batch render start: " + DateTime.Now.ToString() + Environment.NewLine;
             TxtLog.AppendText(Trace);
 
@@ -968,23 +964,8 @@ namespace FractalFun
                     Display.Image.Dispose();
                 }
                 Display.Refresh();
-                Bitmap Paper = MakePaper();
-
-                // Set up the paper...
-                for (int ix = 0; ix < (int)W1; ix++)
-                {
-                    for (int iy = 0; iy < (int)H1; iy++)
-                    {
-                        if (DarkMode)
-                        {
-                            Paper.SetPixel(ix, iy, Color.Black);
-                        }
-                        else
-                        {
-                            Paper.SetPixel(ix, iy, Color.White);
-                        }
-                    }
-                }
+                Paper = MakePaper();
+                CleanPaper();
 
                 // Update the UI image with the clean sheet of paper
                 Display.Image = Paper;
@@ -1101,7 +1082,29 @@ namespace FractalFun
         public Bitmap MakePaper()
         {
             return new Bitmap((int)W1, (int)H1, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
-            //return new Bitmap((int)Wid, (int)Hei, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
+        }
+
+        /// <summary>
+        /// Paint the bitmap "Paper" black or white
+        /// </summary>
+        public void CleanPaper()
+        {
+            for (int ix = 0; ix < (int)W1; ix++)
+            {
+                for (int iy = 0; iy < (int)H1; iy++)
+                {
+                    if (DarkMode)
+                    {
+                        // "I see some paper and I want to paint it black"
+                        Paper.SetPixel(ix, iy, Color.Black);
+                    }
+                    else
+                    {
+                        // White paper please
+                        Paper.SetPixel(ix, iy, Color.White);
+                    }
+                }
+            }
         }
 
         /// <summary>
@@ -1110,7 +1113,6 @@ namespace FractalFun
         /// Or... if DarkMode is true
         /// Set first time pixels to dark gray and then lighten them each
         /// time they are revisited until they are white
-        /// 
         /// </summary>
         /// <param name="x">X coordinate</param>
         /// <param name="y">Y coordinate</param>
@@ -1135,6 +1137,7 @@ namespace FractalFun
 
             if (DarkMode)
             {
+                // Dark mode
                 // If we are darker than white, lighten
                 if (r < Wh.R) { r++; }
                 if (g < Wh.G) { g++; }
@@ -1152,6 +1155,7 @@ namespace FractalFun
             }
             else
             {
+                // Light mode
                 // If we are brighter than black, darken
                 if (r > Lo.R) { r--; }
                 if (g > Lo.G) { g--; }
@@ -1186,6 +1190,7 @@ namespace FractalFun
         /// <param name="d">Value of double D</param>
         public void Stampy(string name, double a, double b, double c, double d)
         {
+            // Transfer the current image to a fresh bitmap (set high quality)
             Bitmap Velum = (Bitmap)Display.Image;
             RectangleF WreckAndTangle = new RectangleF(0, 0, Velum.Width, Velum.Height);
             Graphics Overlay = Graphics.FromImage(Velum);
@@ -1198,6 +1203,8 @@ namespace FractalFun
                 LineAlignment = StringAlignment.Near // Top
             };
             string Mess = " " + name + "-A:" + a.ToString() + " B:" + b.ToString() + " C:" + c.ToString() + " D:" + d.ToString();
+
+            // Stamp the image with the comment
             if (DarkMode)
             {
                 Overlay.DrawString(Mess, new Font("Tahoma", 9), Brushes.White, WreckAndTangle, Floormat);
@@ -1206,6 +1213,8 @@ namespace FractalFun
             {
                 Overlay.DrawString(Mess, new Font("Tahoma", 9), Brushes.Black, WreckAndTangle, Floormat);
             }
+
+            // Copy the new combined image back to the main bitmap
             Overlay.Flush();
             Display.Image = Velum;
         }
@@ -1475,14 +1484,14 @@ namespace FractalFun
     /// </summary>
     public class Attractor
     {
-        public int id;
-        public string name;
-        public double lyap;
-        public double a;
-        public double b;
-        public double c;
-        public double d;
-        public string mut;
-        public int scale;
+        public int id;          // lookup id(selected by dropdown)
+        public string name;     // A unique name for the predefine
+        public double lyap;     // Lyapunof cooeficient (not currently used)
+        public double a;        // "A" parameter
+        public double b;        // "B" parameter
+        public double c;        // "C" parameter (optional)
+        public double d;        // "D" parameter (optional)
+        public string mut;      // Mutation (attractor classification)
+        public int scale;       // Scale factor (arbitrary based on a size of n x n)
     }
 }
