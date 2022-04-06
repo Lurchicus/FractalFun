@@ -464,12 +464,13 @@ namespace FractalFun
             // interface to read only text boxes for reference
 
             // Clamping to fixed values for now
-            TxtHeight.Text = "1050"; // Display.Height.ToString();
-            TxtWidth.Text = "1680"; // Display.Width.ToString();
-            H1 = 1050; // (double)Display.Height;
-            W1 = 1680; // (double)Display.Width;
-            MinY = 1050; // (double)Display.Height;
-            MinX = 1680; // (double)Display.Width;
+            // Back to real values
+            TxtHeight.Text = Display.Height.ToString(); // "1050";
+            TxtWidth.Text =  Display.Width.ToString();  // "1680";
+            H1 = (double)Display.Height;                // 1050;
+            W1 = (double)Display.Width;                 // 1680;
+            MinY = (double)Display.Height;              // 1050;
+            MinX = (double)Display.Width;               // 1680;
 
             // Update the read only min/max values...
             // these will contain real values during render
@@ -597,13 +598,14 @@ namespace FractalFun
         {
             if (ICanHazResize)
             {
-                // For now, clamping to predefined values...
-                TxtHeight.Text = "1050"; // Display.Height.ToString();
-                TxtWidth.Text = "1680"; // Display.Width.ToString();
-                H1 = 1680; //(double)Display.Height;
-                W1 = 1050; //(double)Display.Width;
-                MinX = 1680;  //(double)Display.Width;
-                MinY = 1050;  //(double)Display.Height;
+                // For now, clamping to predefined values... 
+                // Back to real values
+                TxtHeight.Text = Display.Height.ToString(); // "1050";
+                TxtWidth.Text =  Display.Width.ToString();  // "1680";
+                H1 = (double)Display.Height;                // 1680;
+                W1 = (double)Display.Width;                 // 1050;
+                MinX = (double)Display.Width;               // 1680;
+                MinY = (double)Display.Height;              // 1050;
                 MaxX = 0.0;
                 MaxY = 0.0;
                 TxtMinX.Text = MinX.ToString();
@@ -1467,6 +1469,8 @@ namespace FractalFun
 // 04/05/2022 DWR - Moved history and to do info to the bottom of the
 // 1.1.30.0      file Attractory.cs. Design tweaks and a couple bug
 //               fixes.
+// 04/05/2022 DWR - Removed hard coding of screen dimension info which 
+// 1.1.31.0      fixed a lot of really wierd issues.
 // 
 // Open/ToDo issues:
 //               - I'm also doing some experimentation with converting
@@ -1492,13 +1496,6 @@ namespace FractalFun
 //               it here. If I recall correctly, you clicked a left 
 //               facing triangle to hide the panel and a right facing
 //               one (just visible) to restore the panel.
-//
-//               - There is an issue with initializing the "paper". It
-//               works correctly when creating multiple renders but not
-//               for single renders. I'm doing something in one path 
-//               that I'm not doing in the other. I need to trace
-//               "Render" in detail for both modes with the UI on 
-//               another screen.
 //
 //               - I need to rework the loop mode so it can work on
 //               multiple ranges and not stop until all loops hit end.
@@ -1533,3 +1530,11 @@ namespace FractalFun
 //    multiple ranges and not stop until all loops hit end.
 //    There's no reason this shouldn't work. Focus initially
 //    on the switch statements to remove the limitations.
+//
+// 5. There is an issue with initializing the "paper". It
+//    works correctly when creating multiple renders but not
+//    for single renders. I'm doing something in one path 
+//    that I'm not doing in the other. I need to trace
+//    "Render" in detail for both modes with the UI on 
+//    another screen. Fixed by removing hard coded screen
+//    size info and going back to real info.
