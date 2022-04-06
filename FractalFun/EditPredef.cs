@@ -31,12 +31,12 @@ namespace FractalFun
         /// </summary>
         /// <param name="sender">EditPrefs form</param>
         /// <param name="e">any parameters</param>
-        private void EditPredef_Load(object sender, EventArgs e)
+        private async void EditPredef_Load(object sender, EventArgs e)
         {
             TxtEdit.Clear();
             using (StreamReader r = new StreamReader(PredefineFile))
             {
-                string json = r.ReadToEnd();
+                string json = await r.ReadToEndAsync();
                 TxtEdit.Text = json;
                 TxtEdit.Select(0, 0);
                 r.Close();
@@ -49,12 +49,12 @@ namespace FractalFun
         /// </summary>
         /// <param name="sender">Save button</param>
         /// <param name="e">Params if any</param>
-        private void ToolStripButton1_Click(object sender, EventArgs e)
+        private async void ToolStripButton1_Click(object sender, EventArgs e)
         {
             string json = TxtEdit.Text;
             using (StreamWriter j = new StreamWriter(PredefineFile, false))
             {
-                j.Write(json);
+                await j.WriteAsync(json);
                 j.Flush();
                 j.Close();
             }

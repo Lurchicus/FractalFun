@@ -16,12 +16,12 @@ namespace FractalFun
             ViewerFile = FileToView;
         }
 
-        private void FileViewer_Load(object sender, EventArgs e)
+        private async void FileViewer_Load(object sender, EventArgs e)
         {
             TxtView.Clear();
             using (StreamReader r = new StreamReader(ViewerFile ))
             {
-                string GNU3 = r.ReadToEnd();
+                string GNU3 = await r.ReadToEndAsync();
                 TxtView.Text = GNU3;
                 TxtView.Select(0, 0); // Unselect all
                 r.Close();

@@ -13,11 +13,13 @@ using System.Windows.Forms;
 /// FractalFun.Attractory
 /// 
 /// Creates Pickover attractors based on the code described in the book 
+/// "Chaos In Wonderland" as well as adhoc or original predefined attractors
+/// 
 /// "Chaos In Wonderland" by Clifford A. Pickover, 1994, pg 267 M.2,
-/// ISBN 0-312-10743-9 as well as adhoc or original predefined attractors
+/// ISBN 0-312-10743-9
 /// 
 /// Fractal Fun (Attractor Exploder)
-/// Copyright(C) 2019, 2020, 2021 by Dan Rhea
+/// Copyright(C) 2019, 2020, 2021, 2022 by Dan Rhea
 ///
 /// This program is free software: you can redistribute it and/or modify
 /// it under the terms of the GNU General Public License as published by
@@ -32,156 +34,6 @@ using System.Windows.Forms;
 /// You should have received a copy of the GNU General Public License
 /// along with this program. If not, see<https://www.gnu.org/licenses/>.
 /// 
-/// Changes:
-/// 
-/// 3/20/2019 DWR Moved file save and render logic into thier own procedures
-/// 1.1.12.0      and out of the respective event handlers.
-/// 3/20/2019 DWR Move most event handler logic into seperate procedures so
-/// 1.1.13.0      so they can be called independant of the events and to 
-///               make the code cleaner.
-/// 3/21/2019 DWR Added UI elements to suport rendering multiple images
-/// 1.1.14.0
-/// 3/22/2019 DWR Refined the looping support
-/// 1.1.15.0      For looping mode added a folder dialog to set where we
-///               we are going to save files
-/// 4/15/2019 DWR Expanded the comments in much of the program 
-/// 1.1.17.0
-/// 4/17/2019 DWR Allow looping without a file save in the path is null 
-/// 1.1.18.0      (path dialog canceled) and added more comments where
-///               I felt it was appropriate. Added a todo/bug list
-/// 4/20/2019 DWR Locked buttons to the bottom of the form and added a 
-/// 1.1.19.0      checkbox to set a break all renders (with the default
-///               being break current render) when the "Break" button is
-///               checked. Added a property to follow the break mode.
-///               - Resolves issue 1
-/// 4/20/2019 DWR I added an event handler to all of the editable text
-/// 1.1.20.0      boxes. It triggers on Focus leaving the control so 
-///               for the moment, no help screen needed for the "Reset"
-///               button now. The readonly text boxes can be safely
-///               ignored.
-///               - Resolves issue 2
-///               I also added code to validate the textbox contents... 
-///               using CheckD (double check) and CheckI (integer check)
-/// 4/20/2019 DWR Issue 3, added the GNU3 license text file to the 
-/// 1.1.21.0      project. Getting started on a new form to display the
-///               license text in a modal dialog. Finished up the file
-///               viewer form and text load using its constructor.
-///               Moved the Edit button to the bottom of the UI and 
-///               added the "License" button to the lower part of the
-///               UI and added a click event handler to show the file
-///               viewer form as a modal dialog.
-///               - Resolves issue 3
-/// 4/30/2019 DWR - After I did some research I discovered that the 
-/// 1.1.22.0      attractors this visualizer creates are all Pickover
-///               attractors so I'm changing "strange attractor" 
-///               references to "Pickover attractors". Credit where
-///               credit is due! "Pickover! I read your book!" :)
-///               - I darkened the settings panel and I'm working on a
-///               dark mode that will draw the attractors on a black
-///               background with dark gray through white pixels.
-///               - Dark mode is now implemented, just like light mode,
-///               only darker
-///               - I'm also doing some experimentation with converting
-///               our ARGB colors to HSV and looping through the hues
-///               rather than the current gray scale each time I hit a
-///               lit pixel. Eventually I will expand out to more 
-///               visualizers for other attractors and introduce a few
-///               - alternate Pickover attractor variants added with a 
-///               drop down list to select them
-///               
-///                 xnew=cos(y*b)+c*sin(x*b)
-///                 ynew=cos(x*a)+d*sin(y*a)
-/// 
-///               - Also working on adding automated unit tests to the
-///               project... not that a small project like this really
-///               needs this level of testing, but I need to master this
-///               for my real job (#DevOps)
-/// 5/09/2019 DWR - Fixed a bug that left us in dark mode no matter what
-/// 1.1.23.0      the checkbox was set to.
-/// 11/24/2020 DWR - Brightened up the UI a bit
-/// 1.1.24.0       - Did some clean-up and optimizations.
-///                - Set better colors for the editor and file viewer
-///                - Added version to text log
-///                - Got rid of minor "issue" warnings
-/// 02/04/2021 DWR - Added code that lets me pan the image some. This 
-/// 1.1.25.0       needs a lot more work since viewporting does not seem
-///                to be a thing for standard .NET WinForms. Looking for
-///                an open source graphics package that supports it. I 
-///                know Leadtools can do this sort of thing but I'm 
-///                looking for an open source solution.
-///                - For now fixed the image size to 1050x1680. This makes
-///                it larger than the panel it's housed in. I will add a
-///                JSON file with various resolutions that can be picked
-///                from a drop-down (not done yet).
-///                - Added "StampMode" that when true lets me put some of
-///                the information about the attractor in the upper left
-///                corner of the image. Added a checkbox to control the mode.
-///                - Changed the renderer to update the screen from every
-///                1000 iterations to every 10,000. The display is a tiny
-///                bit choppier, but way faster. I tried 100,000 but it
-///                didn't speed up much and made the image look like a
-///                slideshow.
-///                - Redid the "splash" text displayed in the log text 
-///                box to include official license wording (Gnu GPL3).
-///                - For the log text box added batch render start and
-///                stop times as well as the parameters for each render.
-///                - Added file information to thelog text box. It's not
-///                pretty, but it's useful enough to include anyway.
-/// 02/05/2020 DWR - The almost required even release number to go fix
-/// 1.1.26.0       comments, formatting and other "papercut" type items
-///                introduced in the previous release.
-///                - Flipped Height and Width UI elements so they match 
-///                the order of MinX, MaxX, MinY and MaxY (much less
-///                confusing this way).
-///               - Defaulted "Break stops all renders" to true. 
-/// 04/16/2021 DWR - Corrected references to Clifford Pickover's name...
-/// 1.1.27.0      I read his book and still got his last name wrong. It's
-///               not like I follow him on Twitter and Facebook either (I
-///               do follow him on both of course). 
-///               I Feel pretty silly about it.
-/// 04/17/2021 DWR - I reworked the loop mode so it can work on (WIP)
-/// 1.1.28.0      multiple ranges and not stop until all loops hit end.
-///               This actually greatly simplified the batch loop code.
-/// 04/17/2021 DWR - Added a "current" column for A through D on the UI
-/// 1.1.29.0      So it's easier to track looping progress. Tweaked the
-///               code and comments a bit.
-/// 
-/// Open/ToDo issues:
-///               - I'm also doing some experimentation with converting
-///               our ARGB colors to HSV and looping through the hues
-///               rather than the current gray scale each time I hit a
-///               lit pixel. Eventually I will expand out to more 
-///               visualizers for other attractors and introduce a few
-///               predefined gradients. Hacking away at this.
-///               - Thinking about adding a checkbox to hide (minimize)
-///               the left panel during render to maximize the visible
-///               area for the image panel.
-///               - There is an issue with initializing the "paper". It
-///               works correctly when creating multiple renders but not
-///               for single renders. I'm doing something in one path 
-///               that I'm not doing in the other.
-///               - I need to rework the loop mode so it can work on
-///               multiple ranges and not stop until all loops hit end.
-///               There's no reason this shouldn't work. Focus initially
-///               on the switch statements to remove the limitations.
-/// 
-/// Resolved issues:
-/// 1. Determine if a break during looping kills the whole
-///    series or just the current render. Currently it just
-///    affects the current render. Maybe a checkbox to set
-///    the break option? TBD
-/// 2. There is a need for a help screen... for example, we
-///    need to inform the user that after any UI changes, 
-///    they should hit reset... on the other hand, if I quit
-///    being lazy and add an event handler for all the 
-///    changeable UI elements, I could handle this internally.
-/// 3. Need to add the GNU license and a simple viewer so the
-///    user can read it if they want (form with a read only
-///    text box on it).
-/// 4. WIP: I need to rework the loop mode so it can work on
-///    multiple ranges and not stop until all loops hit end.
-///    There's no reason this shouldn't work. Focus initially
-///    on the switch statements to remove the limitations.
 ///    
 /// </summary>
 namespace FractalFun
@@ -562,13 +414,13 @@ namespace FractalFun
         /// <summary>
         /// Load the predefines file (Json) and load the drop down list
         /// </summary>
-        public void LoadPredefines()
+        public async void LoadPredefines()
         {
             if (Attractors != null) { Attractors.Clear(); }
             // Reload predefined attractors from attached json file to drop-down
             using (StreamReader r = new StreamReader("PredefinedAttractors.json"))
             {
-                string json = r.ReadToEnd();
+                string json = await r.ReadToEndAsync();
                 Attractors = JsonConvert.DeserializeObject<List<Attractor>>(json);
             }
 
@@ -610,6 +462,8 @@ namespace FractalFun
 
             // Move the height and width of our drawing
             // interface to read only text boxes for reference
+
+            // Clamping to fixed values for now
             TxtHeight.Text = "1050"; // Display.Height.ToString();
             TxtWidth.Text = "1680"; // Display.Width.ToString();
             H1 = 1050; // (double)Display.Height;
@@ -743,6 +597,7 @@ namespace FractalFun
         {
             if (ICanHazResize)
             {
+                // For now, clamping to predefined values...
                 TxtHeight.Text = "1050"; // Display.Height.ToString();
                 TxtWidth.Text = "1680"; // Display.Width.ToString();
                 H1 = 1680; //(double)Display.Height;
@@ -804,9 +659,9 @@ namespace FractalFun
             if (CLooping && !CDone) { CCurr += CStep; }
             if (DLooping && !DDone) { DCurr += DStep; }
             TxtACurr.Text = (ALooping) ? ACurr.ToString() : A1.ToString();
-            TxtBCurr.Text = (ALooping) ? BCurr.ToString() : B1.ToString();
-            TxtCCurr.Text = (ALooping) ? CCurr.ToString() : C1.ToString();
-            TxtDCurr.Text = (ALooping) ? DCurr.ToString() : D1.ToString();
+            TxtBCurr.Text = (BLooping) ? BCurr.ToString() : B1.ToString();
+            TxtCCurr.Text = (CLooping) ? CCurr.ToString() : C1.ToString();
+            TxtDCurr.Text = (DLooping) ? DCurr.ToString() : D1.ToString();
             Application.DoEvents();
         }
 
@@ -1291,7 +1146,7 @@ namespace FractalFun
         /// <param name="B">B1</param>
         /// <param name="C">C1</param>
         /// <param name="D">D1</param>
-        public void SaveLog(string LogFile, double A, double B, double C, double D)
+        public async void SaveLog(string LogFile, double A, double B, double C, double D)
         {
             string LogName = "";
 
@@ -1316,7 +1171,7 @@ namespace FractalFun
                       D.ToString() + "," +
                       IScale.ToString() + "," +
                       Name1 + "," + LogFile;
-            F.WriteLine(LogLine);
+            await F.WriteLineAsync(LogLine);
             F.Flush();
             F.Close();
         }
@@ -1495,3 +1350,186 @@ namespace FractalFun
         public int scale;       // Scale factor (arbitrary based on a size of n x n)
     }
 }
+
+// Changes:
+// 
+// 3/20/2019 DWR Moved file save and render logic into thier own procedures
+// 1.1.12.0      and out of the respective event handlers.
+// 3/20/2019 DWR Move most event handler logic into seperate procedures so
+// 1.1.13.0      so they can be called independant of the events and to 
+//               make the code cleaner.
+// 3/21/2019 DWR Added UI elements to suport rendering multiple images
+// 1.1.14.0
+// 3/22/2019 DWR Refined the looping support
+// 1.1.15.0      For looping mode added a folder dialog to set where we
+//               we are going to save files
+// 4/15/2019 DWR Expanded the comments in much of the program 
+// 1.1.17.0
+// 4/17/2019 DWR Allow looping without a file save in the path is null 
+// 1.1.18.0      (path dialog canceled) and added more comments where
+//               I felt it was appropriate. Added a todo/bug list
+// 4/20/2019 DWR Locked buttons to the bottom of the form and added a 
+// 1.1.19.0      checkbox to set a break all renders (with the default
+//               being break current render) when the "Break" button is
+//               checked. Added a property to follow the break mode.
+//               - Resolves issue 1
+// 4/20/2019 DWR I added an event handler to all of the editable text
+// 1.1.20.0      boxes. It triggers on Focus leaving the control so 
+//               for the moment, no help screen needed for the "Reset"
+//               button now. The readonly text boxes can be safely
+//               ignored.
+//               - Resolves issue 2
+//               I also added code to validate the textbox contents... 
+//               using CheckD (double check) and CheckI (integer check)
+// 4/20/2019 DWR Issue 3, added the GNU3 license text file to the 
+// 1.1.21.0      project. Getting started on a new form to display the
+//               license text in a modal dialog. Finished up the file
+//               viewer form and text load using its constructor.
+//               Moved the Edit button to the bottom of the UI and 
+//               added the "License" button to the lower part of the
+//               UI and added a click event handler to show the file
+//               viewer form as a modal dialog.
+//               - Resolves issue 3
+// 4/30/2019 DWR - After I did some research I discovered that the 
+// 1.1.22.0      attractors this visualizer creates are all Pickover
+//               attractors so I'm changing "strange attractor" 
+//               references to "Pickover attractors". Credit where
+//               credit is due! "Pickover! I read your book!" :)
+//               - I darkened the settings panel and I'm working on a
+//               dark mode that will draw the attractors on a black
+//               background with dark gray through white pixels.
+//               - Dark mode is now implemented, just like light mode,
+//               only darker
+//               - I'm also doing some experimentation with converting
+//               our ARGB colors to HSV and looping through the hues
+//               rather than the current gray scale each time I hit a
+//               lit pixel. Eventually I will expand out to more 
+//               visualizers for other attractors and introduce a few
+//               - alternate Pickover attractor variants added with a 
+//               drop down list to select them
+//               
+//                 xnew=cos(y*b)+c*sin(x*b)
+//                 ynew=cos(x*a)+d*sin(y*a)
+// 
+//               - Also working on adding automated unit tests to the
+//               project... not that a small project like this really
+//               needs this level of testing, but I need to master this
+//               for my real job (#DevOps)
+// 5/09/2019 DWR - Fixed a bug that left us in dark mode no matter what
+// 1.1.23.0      the checkbox was set to.
+// 11/24/2020 DWR - Brightened up the UI a bit
+// 1.1.24.0       - Did some clean-up and optimizations.
+//                - Set better colors for the editor and file viewer
+//                - Added version to text log
+//                - Got rid of minor "issue" warnings
+// 02/04/2021 DWR - Added code that lets me pan the image some. This 
+// 1.1.25.0       needs a lot more work since viewporting does not seem
+//                to be a thing for standard .NET WinForms. Looking for
+//                an open source graphics package that supports it. I 
+//                know Leadtools can do this sort of thing but I'm 
+//                looking for an open source solution.
+//                - For now fixed the image size to 1050x1680. This makes
+//                it larger than the panel it's housed in. I will add a
+//                JSON file with various resolutions that can be picked
+//                from a drop-down (not done yet).
+//                - Added "StampMode" that when true lets me put some of
+//                the information about the attractor in the upper left
+//                corner of the image. Added a checkbox to control the mode.
+//                - Changed the renderer to update the screen from every
+//                1000 iterations to every 10,000. The display is a tiny
+//                bit choppier, but way faster. I tried 100,000 but it
+//                didn't speed up much and made the image look like a
+//                slideshow.
+//                - Redid the "splash" text displayed in the log text 
+//                box to include official license wording (Gnu GPL3).
+//                - For the log text box added batch render start and
+//                stop times as well as the parameters for each render.
+//                - Added file information to thelog text box. It's not
+//                pretty, but it's useful enough to include anyway.
+// 02/05/2020 DWR - The almost required even release number to go fix
+// 1.1.26.0       comments, formatting and other "papercut" type items
+//                introduced in the previous release.
+//                - Flipped Height and Width UI elements so they match 
+//                the order of MinX, MaxX, MinY and MaxY (much less
+//                confusing this way).
+//               - Defaulted "Break stops all renders" to true. 
+// 04/16/2021 DWR - Corrected references to Clifford Pickover's name...
+// 1.1.27.0      I read his book and still got his last name wrong. It's
+//               not like I follow him on Twitter and Facebook either (I
+//               do follow him on both of course). 
+//               I Feel pretty silly about it.
+// 04/17/2021 DWR - I reworked the loop mode so it can work on (WIP)
+// 1.1.28.0      multiple ranges and not stop until all loops hit end.
+//               This actually greatly simplified the batch loop code.
+// 04/17/2021 DWR - Added a "current" column for A through D on the UI
+// 1.1.29.0      So it's easier to track looping progress. Tweaked the
+//               code and comments a bit.
+// 04/05/2022 DWR - Moved history and to do info to the bottom of the
+// 1.1.30.0      file Attractory.cs. Design tweaks and a couple bug
+//               fixes.
+// 
+// Open/ToDo issues:
+//               - I'm also doing some experimentation with converting
+//               our ARGB colors to HSV and looping through the hues
+//               rather than the current gray scale each time I hit a
+//               lit pixel. Eventually I will expand out to more 
+//               visualizers for other attractors and introduce a few
+//               predefined gradients. Hacking away at this.
+//               * I have located a class on Stack Overflow that I'm 
+//               using in my YALife program that should work perfectly
+//               to fulfil this requirement. It will require some 
+//               adjustments as the YALife version only supplies 256
+//               colors. The class is capable of supplying many more 
+//               gradient colors, which is good as a given pixel can
+//               be referenced many times when we interate the attractor
+//               10 million times.
+//
+//               - Thinking about adding a checkbox to hide (minimize)
+//               the left panel during render to maximize the visible
+//               area for the image panel.
+//               * I wrote an old VB.NET program that used this feature.
+//               If I can track it down it might save time implementing 
+//               it here. If I recall correctly, you clicked a left 
+//               facing triangle to hide the panel and a right facing
+//               one (just visible) to restore the panel.
+//
+//               - There is an issue with initializing the "paper". It
+//               works correctly when creating multiple renders but not
+//               for single renders. I'm doing something in one path 
+//               that I'm not doing in the other. I need to trace
+//               "Render" in detail for both modes with the UI on 
+//               another screen.
+//
+//               - I need to rework the loop mode so it can work on
+//               multiple ranges and not stop until all loops hit end.
+//               There's no reason this shouldn't work. Focus initially
+//               on the switch statements to remove the limitations.
+//
+//               - Switch to the MIT license.
+//
+//               - Eventually move all of the history and ToDo to the 
+//               end of the Attractory.cs file.
+//
+//               - Create a Readme.md file for the project.
+// 
+//    Resolved issues:
+//
+// 1. Determine if a break during looping kills the whole
+//    series or just the current render. Currently it just
+//    affects the current render. Maybe a checkbox to set
+//    the break option? TBD
+//
+// 2. There is a need for a help screen... for example, we
+//    need to inform the user that after any UI changes, 
+//    they should hit reset... on the other hand, if I quit
+//    being lazy and add an event handler for all the 
+//    changeable UI elements, I could handle this internally.
+//
+// 3. Need to add the GNU license and a simple viewer so the
+//    user can read it if they want (form with a read only
+//    text box on it).
+//
+// 4. WIP: I need to rework the loop mode so it can work on
+//    multiple ranges and not stop until all loops hit end.
+//    There's no reason this shouldn't work. Focus initially
+//    on the switch statements to remove the limitations.
