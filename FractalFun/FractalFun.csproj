@@ -26,6 +26,8 @@
     <Version>1.1.32.0</Version>
     <Title>Fractal Fun</Title>
     <Authors>Dan Rhea</Authors>
+    <AssemblyVersion>1.1.33.0</AssemblyVersion>
+    <FileVersion>1.1.33.0</FileVersion>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <Optimize>True</Optimize>

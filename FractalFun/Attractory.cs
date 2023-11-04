@@ -13,13 +13,13 @@ using System.Windows.Forms;
 /// FractalFun.Attractory
 /// 
 /// Creates Pickover attractors based on the code described in the book 
-/// "Chaos In Wonderland" as well as adhoc or original predefined attractors
+/// "Chaos In Wonderland" as well as ad-hoc or original predefined attractors
 /// 
 /// "Chaos In Wonderland" by Clifford A. Pickover, 1994, pg 267 M.2,
 /// ISBN 0-312-10743-9
 /// 
 /// Fractal Fun (Attractor Exploder)
-/// Copyright(C) 2019, 2020, 2021, 2022 by Dan Rhea
+/// Copyright(C) 2019, 2020, 2021, 2022, 2023 by Dan Rhea
 ///
 /// This program is free software: you can redistribute it and/or modify
 /// it under the terms of the GNU General Public License as published by
@@ -103,39 +103,48 @@ namespace FractalFun
         /// <summary>
         /// Parameters (see above for the objects encapsulated below)
         /// </summary>
+
+        // Parameter value (also used as start value if looping)
         public double A1 { get => A; set => A = value; }
         public double B1 { get => B; set => B = value; }
         public double C1 { get => C; set => C = value; }
         public double D1 { get => D; set => D = value; }
 
+        // Drawing area height and width (Paper)
         public double H1 { get => H; set => H = value; }
         public double W1 { get => W; set => W = value; }
 
+        // Parameter end values when looping
         public double AEnd1 { get => AEnd; set => AEnd = value; }
         public double BEnd1 { get => BEnd; set => BEnd = value; }
         public double CEnd1 { get => CEnd; set => CEnd = value; }
         public double DEnd1 { get => DEnd; set => DEnd = value; }
 
+        // Step value for parameters when looping 
         public double AStep1 { get => AStep; set => AStep = value; }
         public double BStep1 { get => BStep; set => BStep = value; }
         public double CStep1 { get => CStep; set => CStep = value; }
         public double DStep1 { get => DStep; set => DStep = value; }
 
+        // Minimum and maximum X and Y values
         public double MinX { get => MinX_; set => MinX_ = value; }
         public double MinY { get => MinY_; set => MinY_ = value; }
         public double MaxX { get => MaxX_; set => MaxX_ = value; }
         public double MaxY { get => MaxY_; set => MaxY_ = value; }
 
+        // Flag to indicate a given parameter is looping
         public bool ALooping1 { get => ALooping; set => ALooping = value; }
         public bool BLooping1 { get => BLooping; set => BLooping = value; }
         public bool CLooping1 { get => CLooping; set => CLooping = value; }
         public bool DLooping1 { get => DLooping; set => DLooping = value; }
 
+        // Current parameter value (looping or not)
         public double ACurr1 { get => ACurr; set => ACurr = value; }
         public double BCurr1 { get => BCurr; set => BCurr = value; }
         public double CCurr1 { get => CCurr; set => CCurr = value; }
         public double DCurr1 { get => DCurr; set => DCurr = value; }
 
+        // Parameter Looping done flags
         public bool ADone1 { get => ADone; set => ADone = value; }
         public bool BDone1 { get => BDone; set => BDone = value; }
         public bool CDone1 { get => CDone; set => CDone = value; }
@@ -200,6 +209,7 @@ namespace FractalFun
             BreakAll = false;
             CBXBreakMode.Checked = BreakAll;    // Defaults to off
 
+            // Load predefines from JSON file
             LoadPredefines();
 
             // Load attractor type drop down
@@ -391,7 +401,6 @@ namespace FractalFun
             {
                 DarkMode = false;
             }
-
         }
 
         /// <summary>
@@ -462,9 +471,6 @@ namespace FractalFun
 
             // Move the height and width of our drawing
             // interface to read only text boxes for reference
-
-            // Clamping to fixed values for now
-            // Back to real values
             TxtHeight.Text = Display.Height.ToString(); // "1050";
             TxtWidth.Text =  Display.Width.ToString();  // "1680";
             H1 = (double)Display.Height;                // 1050;
@@ -830,18 +836,18 @@ namespace FractalFun
                 Application.DoEvents();
 
                 // Init a few working variables
-                double x = 0.1; // x coordinate
-                double y = 0.1; // y coordinate
-                double xn;      // new x coordinate
-                double yn;      // new y coordinate
-                double xs;      // scaled x coordinate
-                double ys;      // scaled y coordinate
-                double i = 0.0; // iteration counter
+                double X = 0.1; // x coordinate
+                double Y = 0.1; // y coordinate
+                double XNew;      // new x coordinate
+                double YNew;      // new y coordinate
+                double XScale;      // scaled x coordinate
+                double YScale;      // scaled y coordinate
+                double Iteration = 0.0; // iteration counter
 
                 // Render 10 million iterations
-                for (Int64 n = 1; n <= 10000000; n++)
+                for (Int64 IntIteration = 1; IntIteration <= 10000000; IntIteration++)
                 {
-                    i = (double)n;
+                    Iteration = (double)IntIteration;
 
                     // Calculate new XY coordinates (of note, the rendered 
                     // images from the calculation below appear to be 
@@ -850,25 +856,25 @@ namespace FractalFun
                     switch (Mode)
                     {
                         case 0:
-                            xn = Math.Sin(y * B) + C * Math.Sin(x * B);
-                            yn = Math.Sin(x * A) + D * Math.Sin(y * A);
+                            XNew = Math.Sin(Y * B) + C * Math.Sin(X * B);
+                            YNew = Math.Sin(X * A) + D * Math.Sin(Y * A);
                             break;
                         case 1:
-                            xn = Math.Sin(y * B) + C * Math.Cos(x * B);
-                            yn = Math.Cos(x * A) + D * Math.Sin(y * A);
+                            XNew = Math.Sin(Y * B) + C * Math.Cos(X * B);
+                            YNew = Math.Cos(X * A) + D * Math.Sin(Y * A);
                             break;
                         case 2:
-                            xn = Math.Cos(y * B) + C * Math.Cos(x * B);
-                            yn = Math.Cos(x * A) + D * Math.Cos(y * A);
+                            XNew = Math.Cos(Y * B) + C * Math.Cos(X * B);
+                            YNew = Math.Cos(X * A) + D * Math.Cos(Y * A);
                             break;
                         default:
-                            xn = Math.Sin(y * B) + C * Math.Sin(x * B);
-                            yn = Math.Sin(x * A) + D * Math.Sin(y * A);
+                            XNew = Math.Sin(Y * B) + C * Math.Sin(X * B);
+                            YNew = Math.Sin(X * A) + D * Math.Sin(Y * A);
                             break;
                     }
                     // Update the coordinates
-                    x = xn;
-                    y = yn;
+                    X = XNew;
+                    Y = YNew;
 
                     // Scale the coordinates (scale then center). The scaling
                     // is a little odd since I don't know Max Width 1 until 
@@ -878,27 +884,27 @@ namespace FractalFun
                     // 1025 by 1337 default bitmap (varies based on maximized
                     // screen size). The scale factor comes from the UI or the
                     // predefines JSON file.
-                    xs = (x * IScale) + (W1 / 2.0);
-                    ys = (y * IScale) + (H1 / 2.0);
+                    XScale = (X * IScale) + (W1 / 2.0);
+                    YScale = (Y * IScale) + (H1 / 2.0);
 
                     // Collect scaled plot min/max values (assists if we need to rescale)
-                    if (xs < MinX) { MinX = xs; }
-                    if (xs > MaxX) { MaxX = xs; }
-                    if (ys < MinY) { MinY = ys; }
-                    if (ys > MaxY) { MaxY = ys; }
+                    if (XScale < MinX) { MinX = XScale; }
+                    if (XScale > MaxX) { MaxX = XScale; }
+                    if (YScale < MinY) { MinY = YScale; }
+                    if (YScale > MaxY) { MaxY = YScale; }
 
                     // If the coordinate is in bounds, plot it
-                    if (xs >= 0 && xs <= W1 && ys >= 0 && ys <= H1)
+                    if (XScale >= 0 && XScale <= W1 && YScale >= 0 && YScale <= H1)
                     {
                         // As we plot, check for a previous pixel and color the 
-                        // new pixel appropriatrely
-                        Paper.SetPixel((int)xs, (int)ys, GetColor(xs, ys, Paper));
+                        // new pixel appropriately
+                        Paper.SetPixel((int)XScale, (int)YScale, GetColor(XScale, YScale, Paper));
 
                         // Every 10,000 iterations, update the UI and bitmap display
-                        if ((int)n % 10000 == 0)
+                        if ((int)IntIteration % 10000 == 0)
                         {
                             // Update the UI
-                            TxtIteration.Text = i.ToString();
+                            TxtIteration.Text = Iteration.ToString();
                             Display.Image = Paper;
                             TxtMinX.Text = MinX.ToString();
                             TxtMaxX.Text = MaxX.ToString();
@@ -911,7 +917,7 @@ namespace FractalFun
                     if (HitTheBrakes) { break; }
                 }
                 // Final post render UI and bitmap display update
-                TxtIteration.Text = i.ToString();
+                TxtIteration.Text = Iteration.ToString();
                 Display.Image = Paper;
                 if (StampMode)
                 {
@@ -978,59 +984,59 @@ namespace FractalFun
         public Color GetColor(double x, double y, Bitmap image)
         {
             // Set high and low range for a pixel
-            Color Lo = Color.Black;
-            Color Hi = Color.FromArgb(255, (int)0xE8, (int)0xE8, (int)0xE8); // Lighter gray
-            Color Dg = Color.FromArgb(255, (int)0x1F, (int)0x1F, (int)0x1F); // Very dark gray
-            Color Wh = Color.White;
+            Color Black = Color.Black;
+            Color LightGray = Color.FromArgb(255, (int)0xE8, (int)0xE8, (int)0xE8); // Lighter gray
+            Color DarkGray = Color.FromArgb(255, (int)0x1F, (int)0x1F, (int)0x1F); // Very dark gray
+            Color White = Color.White;
 
             // Grab the color of the current pixel
             Color got = image.GetPixel((int)x, (int)y);
 
             // Break out the current pixel color info
-            byte r = got.R; // Red
-            byte g = got.G; // Blue
-            byte b = got.B; // Green
-            byte a = got.A; // Alpha channel
+            byte Red = got.R; // Red
+            byte Green = got.G; // Green
+            byte Blue = got.B; // Blue
+            byte Alpha = got.A; // Alpha channel
 
             if (DarkMode)
             {
                 // Dark mode
                 // If we are darker than white, lighten
-                if (r < Wh.R) { r++; }
-                if (g < Wh.G) { g++; }
-                if (b < Wh.B) { b++; }
+                if (Red < White.R) { Red++; }
+                if (Green < White.G) { Green++; }
+                if (Blue < White.B) { Blue++; }
 
                 // If we are darker than really dark gray, bump to really dark gray
-                if (r < Dg.R) { r = Dg.R; }
-                if (g < Dg.G) { g = Dg.G; }
-                if (b < Dg.B) { b = Dg.B; }
+                if (Red < DarkGray.R) { Red = DarkGray.R; }
+                if (Green < DarkGray.G) { Green = DarkGray.G; }
+                if (Blue < DarkGray.B) { Blue = DarkGray.B; }
 
                 // Clamp at White
-                if (r >= Wh.R) { r = Wh.R; }
-                if (g >= Wh.G) { g = Wh.G; }
-                if (b >= Wh.B) { b = Wh.B; }
+                if (Red >= White.R) { Red = White.R; }
+                if (Green >= White.G) { Green = White.G; }
+                if (Blue >= White.B) { Blue = White.B; }
             }
             else
             {
                 // Light mode
                 // If we are brighter than black, darken
-                if (r > Lo.R) { r--; }
-                if (g > Lo.G) { g--; }
-                if (b > Lo.B) { b--; }
+                if (Red > Black.R) { Red--; }
+                if (Green > Black.G) { Green--; }
+                if (Blue > Black.B) { Blue--; }
 
                 // If we are brighter than lighter gray (0xFFE8E8E8), bump to lighter gray
-                if (r > Hi.R) { r = Hi.R; }
-                if (g > Hi.G) { g = Hi.G; }
-                if (b > Hi.B) { b = Hi.B; }
+                if (Red > LightGray.R) { Red = LightGray.R; }
+                if (Green > LightGray.G) { Green = LightGray.G; }
+                if (Blue > LightGray.B) { Blue = LightGray.B; }
 
                 // Clamp at black
-                if (r <= Lo.R) { r = Lo.R; }
-                if (g <= Lo.G) { g = Lo.G; }
-                if (b <= Lo.B) { b = Lo.B; }
+                if (Red <= Black.R) { Red = Black.R; }
+                if (Green <= Black.G) { Green = Black.G; }
+                if (Blue <= Black.B) { Blue = Black.B; }
             }
 
             // Reassemble the RGB and return the new color
-            return Color.FromArgb((int)a, (int)r, (int)g, (int)b);
+            return Color.FromArgb((int)Alpha, (int)Red, (int)Green, (int)Blue);
         }
 
         /// <summary>
@@ -1335,7 +1341,7 @@ namespace FractalFun
     }
 
     /// <summary>
-    /// Defines a given attaractor, and the information to create and 
+    /// Defines a given attractor, and the information to create and 
     /// scale it properly. The data from the file PredefinedAttractors.json
     /// is loaded into this class (expressed as a list object)
     /// </summary>
@@ -1343,7 +1349,7 @@ namespace FractalFun
     {
         public int id;          // lookup id(selected by dropdown)
         public string name;     // A unique name for the predefine
-        public double lyap;     // Lyapunof cooeficient (not currently used)
+        public double lyap;     // Lyapunof coefficient (not currently used)
         public double a;        // "A" parameter
         public double b;        // "B" parameter
         public double c;        // "C" parameter (optional)
@@ -1355,12 +1361,12 @@ namespace FractalFun
 
 // Changes:
 // 
-// 3/20/2019 DWR Moved file save and render logic into thier own procedures
+// 3/20/2019 DWR Moved file save and render logic into their own procedures
 // 1.1.12.0      and out of the respective event handlers.
-// 3/20/2019 DWR Move most event handler logic into seperate procedures so
-// 1.1.13.0      so they can be called independant of the events and to 
+// 3/20/2019 DWR Move most event handler logic into separate procedures so
+// 1.1.13.0      so they can be called independently of the events and to 
 //               make the code cleaner.
-// 3/21/2019 DWR Added UI elements to suport rendering multiple images
+// 3/21/2019 DWR Added UI elements to support rendering multiple images
 // 1.1.14.0
 // 3/22/2019 DWR Refined the looping support
 // 1.1.15.0      For looping mode added a folder dialog to set where we
@@ -1446,7 +1452,7 @@ namespace FractalFun
 //                box to include official license wording (Gnu GPL3).
 //                - For the log text box added batch render start and
 //                stop times as well as the parameters for each render.
-//                - Added file information to thelog text box. It's not
+//                - Added file information to the log text box. It's not
 //                pretty, but it's useful enough to include anyway.
 // 02/05/2020 DWR - The almost required even release number to go fix
 // 1.1.26.0       comments, formatting and other "papercut" type items
@@ -1470,11 +1476,12 @@ namespace FractalFun
 // 1.1.30.0      file Attractory.cs. Design tweaks and a couple bug
 //               fixes.
 // 04/05/2022 DWR - Removed hard coding of screen dimension info which 
-// 1.1.31.0      fixed a lot of really wierd issues.
-// 11/04/2023 DWR - Converted to .NET 8.0 Preview
+// 1.1.31.0      fixed a lot of really weird issues.
+// 11/04/2023 DWR - Converted to .NET 8.0 Preview from .NET Framework 4.8
 // 1.1.32.0 
-//
-// Converted to .NET 8.0 Preview
+// 11/04/2023 DWR - Renamed a bunch of variables to something more meaningful.
+// 1.1.33.0       - Updated some outdated or missing comments
+//                - Added some more comments to the JSON file
 // 
 // Open/ToDo issues:
 //               - I'm also doing some experimentation with converting
@@ -1489,7 +1496,7 @@ namespace FractalFun
 //               adjustments as the YALife version only supplies 256
 //               colors. The class is capable of supplying many more 
 //               gradient colors, which is good as a given pixel can
-//               be referenced many times when we interate the attractor
+//               be referenced many times when we iterate the attractor
 //               10 million times.
 //
 //               - Thinking about adding a checkbox to hide (minimize)
@@ -1501,15 +1508,7 @@ namespace FractalFun
 //               facing triangle to hide the panel and a right facing
 //               one (just visible) to restore the panel.
 //
-//               - I need to rework the loop mode so it can work on
-//               multiple ranges and not stop until all loops hit end.
-//               There's no reason this shouldn't work. Focus initially
-//               on the switch statements to remove the limitations.
-//
 //               - Switch to the MIT license.
-//
-//               - Eventually move all of the history and ToDo to the 
-//               end of the Attractory.cs file.
 //
 //               - Create a Readme.md file for the project.
 // 
