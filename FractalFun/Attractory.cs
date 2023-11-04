@@ -1471,6 +1471,10 @@ namespace FractalFun
 //               fixes.
 // 04/05/2022 DWR - Removed hard coding of screen dimension info which 
 // 1.1.31.0      fixed a lot of really wierd issues.
+// 11/04/2023 DWR - Converted to .NET 8.0 Preview
+// 1.1.32.0 
+//
+// Converted to .NET 8.0 Preview
 // 
 // Open/ToDo issues:
 //               - I'm also doing some experimentation with converting
