@@ -353,7 +353,7 @@ namespace FractalFun
         /// <param name="e">Event args</param>
         private void BtnEdit_Click(object sender, EventArgs e)
         {
-            EditPredef EditForm = new EditPredef(PredefinesFile1);
+            EditPredef EditForm = new(PredefinesFile1);
             EditForm.ShowDialog();
             LoadPredefines();
         }
@@ -365,7 +365,7 @@ namespace FractalFun
         /// <param name="e">Event args</param>
         private void BtnLicense_Click(object sender, EventArgs e)
         {
-            FileViewer ViewForm = new FileViewer(ViewFilename);
+            FileViewer ViewForm = new(ViewFilename);
             ViewForm.ShowDialog();
         }
 
@@ -425,9 +425,9 @@ namespace FractalFun
         /// </summary>
         public async void LoadPredefines()
         {
-            if (Attractors != null) { Attractors.Clear(); }
+            Attractors?.Clear();
             // Reload predefined attractors from attached json file to drop-down
-            using (StreamReader r = new StreamReader("PredefinedAttractors.json"))
+            using (StreamReader r = new("PredefinedAttractors.json"))
             {
                 string json = await r.ReadToEndAsync();
                 Attractors = JsonConvert.DeserializeObject<List<Attractor>>(json);
@@ -1055,12 +1055,12 @@ namespace FractalFun
         {
             // Transfer the current image to a fresh bitmap (set high quality)
             Bitmap Velum = (Bitmap)Display.Image;
-            RectangleF WreckAndTangle = new RectangleF(0, 0, Velum.Width, Velum.Height);
+            RectangleF WreckAndTangle = new(0, 0, Velum.Width, Velum.Height);
             Graphics Overlay = Graphics.FromImage(Velum);
             Overlay.InterpolationMode = InterpolationMode.HighQualityBicubic;
             Overlay.PixelOffsetMode = PixelOffsetMode.HighQuality;
             Overlay.TextRenderingHint = TextRenderingHint.AntiAliasGridFit;
-            StringFormat Floormat = new StringFormat()
+            StringFormat Floormat = new()
             {
                 Alignment = StringAlignment.Near, // Left
                 LineAlignment = StringAlignment.Near // Top
@@ -1102,7 +1102,7 @@ namespace FractalFun
             if (!IsLooping)
             {
                 // If we are not looping, use a normal save file dialog
-                // - Build the rest of the fileme and prep the dialog
+                // - Build the rest of the file and prep the dialog
                 SaveFractal.FileName = "Attractor " + TxtName.Text + " " + Frac2 + ".png";
                 SaveFractal.Title = "Save image to file";
                 if (SaveFractal.ShowDialog() == DialogResult.OK)
@@ -1134,7 +1134,7 @@ namespace FractalFun
         /// </summary>
         /// <param name="DT">Local date and time as DateTime</param>
         /// <returns>string dd-mm-yyyy_hh-mm-ss</returns>
-        public string FormatDT(DateTime DT)
+        public static string FormatDT(DateTime DT)
         {
             string Ret = DT.Month.ToString() + "-";
             Ret += DT.Day.ToString() + "-";
@@ -1165,12 +1165,12 @@ namespace FractalFun
                 if (LogFile.Substring(ix, 1) == "\\")
                 {
                     // Yes, append the file name and break out of the loop
-                    LogName = LogFile.Substring(0, ix) + "\\LogFile.txt";
+                    LogName = string.Concat(LogFile.AsSpan(0, ix), "\\LogFile.txt");
                     break;
                 }
             }
             // Open an append file stream
-            StreamWriter F = new StreamWriter(LogName, true);
+            StreamWriter F = new(LogName, true);
 
             // Build output record and write to file
             string LogLine = A.ToString() + "," +
@@ -1190,7 +1190,7 @@ namespace FractalFun
         /// </summary>
         /// <param name="Value">a string</param>
         /// <returns>s string</returns>
-        public string CheckD(string Value)
+        public static string CheckD(string Value)
         {
             try
             {
@@ -1209,7 +1209,7 @@ namespace FractalFun
         /// </summary>
         /// <param name="Value">a string</param>
         /// <returns>s string</returns>
-        public string CheckI(string Value)
+        public static string CheckI(string Value)
         {
             try
             {
@@ -1308,7 +1308,7 @@ namespace FractalFun
 
         private void Display_MouseUp(object sender, MouseEventArgs e)
         {
-            if (!(sender is Control)) return;
+            if (sender is not Control) return;
             WhatADrag = false;
         }
 
@@ -1349,7 +1349,7 @@ namespace FractalFun
     {
         public int id;          // lookup id(selected by dropdown)
         public string name;     // A unique name for the predefine
-        public double lyap;     // Lyapunof coefficient (not currently used)
+        public double lyap;     // Lyapunov coefficient (not currently used)
         public double a;        // "A" parameter
         public double b;        // "B" parameter
         public double c;        // "C" parameter (optional)
@@ -1434,7 +1434,7 @@ namespace FractalFun
 // 1.1.25.0       needs a lot more work since viewporting does not seem
 //                to be a thing for standard .NET WinForms. Looking for
 //                an open source graphics package that supports it. I 
-//                know Leadtools can do this sort of thing but I'm 
+//                know LeadTools can do this sort of thing but I'm 
 //                looking for an open source solution.
 //                - For now fixed the image size to 1050x1680. This makes
 //                it larger than the panel it's housed in. I will add a
@@ -1482,6 +1482,8 @@ namespace FractalFun
 // 11/04/2023 DWR - Renamed a bunch of variables to something more meaningful.
 // 1.1.33.0       - Updated some outdated or missing comments
 //                - Added some more comments to the JSON file
+// 11/08/2023 DWR - Simplificatios and spelling corrections
+// 1.1.34.0
 // 
 // Open/ToDo issues:
 //               - I'm also doing some experimentation with converting
