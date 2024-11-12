@@ -33,8 +33,7 @@ using System.Windows.Forms;
 ///
 /// You should have received a copy of the GNU General Public License
 /// along with this program. If not, see<https://www.gnu.org/licenses/>.
-/// 
-///    
+///   
 /// </summary>
 namespace FractalFun
 {
@@ -226,6 +225,11 @@ namespace FractalFun
             Ver = Assembly.GetExecutingAssembly().GetName().Version.ToString();
             TxtLog.AppendText("Fractal Fun (Attractor Exploder) v" + Ver + nl);
             TxtLog.AppendText("Copyright 2019, 2020, 2021 Dan Rhea" + nl + nl);
+            TxtLog.AppendText("The majority of the render data for this program is " +
+                "from the book \"Chaos in Wonderland\" by Clifford A. Pickover, " +
+                "1994 from page 213, Appendix b.2 ISBN 0-312-10743-9, " +
+                " \"Some Figure Parameters and Descriptions\". See the JSON file " +
+                "PredefinedAttractors.json for details." + nl + nl);
             TxtLog.AppendText("This program is free software: you can redistribute it and/or " + 
                 "modify it under the terms of the GNU General Public License " + 
                 "as published by the Free Software Foundation, either version " + 
@@ -1484,6 +1488,9 @@ namespace FractalFun
 //                - Added some more comments to the JSON file
 // 11/08/2023 DWR - Simplificatios and spelling corrections
 // 1.1.34.0
+// 11/12/2024 DWR - Added Pickover book attribution to the splash text.
+// 1.1.35.0
+// 
 // 
 // Open/ToDo issues:
 //               - I'm also doing some experimentation with converting
